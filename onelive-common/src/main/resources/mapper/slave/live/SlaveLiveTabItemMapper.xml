@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.live.SlaveLiveTabItemMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.LiveTabItem">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="icon_selected_url" property="iconSelectedUrl" />
+        <result column="icon_unselected_url" property="iconUnselectedUrl" />
+        <result column="merchant_code" property="merchantCode" />
+        <result column="icon_code" property="iconCode" />
+        <result column="sort" property="sort" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="is_delete" property="isDelete" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, icon_selected_url, icon_unselected_url, merchant_code, icon_code, sort, create_time, update_time, is_delete
+    </sql>
+
+</mapper>

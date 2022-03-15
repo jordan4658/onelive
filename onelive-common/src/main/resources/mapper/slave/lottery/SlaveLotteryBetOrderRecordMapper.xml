@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.lottery.SlaveLotteryBetOrderRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.LotteryBetOrderRecord">
+        <id column="id" property="id" />
+        <result column="lottery_name" property="lotteryName" />
+        <result column="lottery_category_id" property="lotteryCategoryId" />
+        <result column="lottery_id" property="lotteryId" />
+        <result column="water_amout" property="waterAmout" />
+        <result column="amount" property="amount" />
+        <result column="edit_user" property="editUser" />
+        <result column="edit_time" property="editTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, lottery_name, lottery_category_id, lottery_id, water_amout, amount, edit_user, edit_time
+    </sql>
+
+</mapper>

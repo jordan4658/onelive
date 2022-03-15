@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.platform.SlaveLiveGiftMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        gift_id
+        , use_country, price, font_color, dynamic_image, image_url, is_dynamic, dynamic_show_type, is_divide_anchor, gift_type, is_barrage, stay_time, is_relate_toy, frequency_vibration, vibration_time, sort_num, updated_by, create_time, update_time, created_by
+    </sql>
+
+    <select id="getList" parameterType="com.onelive.common.model.dto.platform.LiveGiftDto"
+            resultType="com.onelive.common.model.dto.platform.LiveGiftDto">
+        SELECT
+	        lg.lang,
+	        lg.gift_name,
+	        gift.*
+        FROM live_gift gift
+        LEFT JOIN live_gift_lang lg ON lg.gift_id = gift.gift_id AND lg.lang = #{lang}
+        <where>
+            <if test="giftName != null and giftName != ''">
+                AND lg.gift_name LIKE "%"#{giftName}"%"
+            </if>
+            <if test="giftType != null">
+                AND gift.gift_type = #{giftType}
+            </if>
+            <if test="status != null">
+                AND gift.status = #{status}
+            </if>
+            <if test="useCountry != null and useCountry != ''">
+                AND FIND_IN_SET(#{useCountry},use_country)
+            </if>
+        </where>
+        GROUP BY gift.gift_id
+        ORDER BY gift.price
+    </select>
+
+    <select id="getListForIndex" parameterType="com.onelive.common.model.dto.platform.LiveGiftForIndexDto"
+            resultType="com.onelive.common.model.dto.platform.LiveGiftForIndexDto">
+        SELECT
+        lg.lang,
+        lg.gift_name,
+        gift.*
+        FROM live_gift gift
+        LEFT JOIN live_gift_lang lg ON lg.gift_id = gift.gift_id
+        WHERE gift.status = 1 AND lg.gift_name IS NOT NULL AND lg.gift_name != ''
+        <if test="lang != null and lang != ''">
+            AND lg.lang = #{lang}
+        </if>
+        <if test="countryCode != null and countryCode != ''">
+            AND FIND_IN_SET(#{countryCode}, use_country)
+        </if>
+        GROUP BY gift.gift_id ORDER BY gift.price
+    </select>
+
+    <select id="getLiveRoomList" parameterType="com.onelive.common.model.dto.platform.LiveGiftForIndexDto"
+            resultType="com.onelive.common.model.dto.platform.LiveGiftForIndexDto">
+        SELECT
+        lg.lang,
+        lg.gift_name,
+        gift.*
+        FROM live_gift gift
+        LEFT JOIN live_gift_lang lg ON lg.gift_id = gift.gift_id
+        WHERE gift.status = 1
+        and gift.gift_type in (1,2,3,4,5)
+        <if test="lang != null and lang != ''">
+            AND lg.lang = #{lang}
+        </if>
+
+        <if test="countryCode != null and countryCode != ''">
+            AND FIND_IN_SET(#{countryCode}, use_country)
+        </if>
+        GROUP BY gift.gift_id ORDER BY gift.price
+    </select>
+
+
+    <select id="getByIdAndLang" resultType="com.onelive.common.model.dto.platform.LiveGiftDto">
+        SELECT lg.lang,
+               lg.gift_name,
+               gift.*
+        FROM live_gift gift
+                 LEFT JOIN live_gift_lang lg ON lg.gift_id = gift.gift_id
+        WHERE gift.gift_id = #{giftId}
+          AND lg.lang = #{lang} LIMIT 1
+    </select>
+
+
+</mapper>

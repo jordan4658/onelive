@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.lottery.LotteryOrderBetRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.LotteryOrderBetRecord">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="order_id" property="orderId" />
+        <result column="cate_id" property="cateId" />
+        <result column="lottery_id" property="lotteryId" />
+        <result column="play_id" property="playId" />
+        <result column="setting_id" property="settingId" />
+        <result column="play_name" property="playName" />
+        <result column="issue" property="issue" />
+        <result column="order_sn" property="orderSn" />
+        <result column="bet_number" property="betNumber" />
+        <result column="bet_count" property="betCount" />
+        <result column="bet_amount" property="betAmount" />
+        <result column="win_amount" property="winAmount" />
+        <result column="back_amount" property="backAmount" />
+        <result column="god_order_id" property="godOrderId" />
+        <result column="tb_status" property="tbStatus" />
+        <result column="is_delete" property="isDelete" />
+        <result column="win_count" property="winCount" />
+        <result column="is_push" property="isPush" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="source" property="source" />
+        <result column="family_id" property="familyId" />
+        <result column="studio_num" property="studioNum" />
+        <result column="show_lottery_name" property="showLotteryName" />
+        <result column="show_play_name" property="showPlayName" />
+        <result column="show_bet_number" property="showBetNumber" />
+        <result column="pid" property="pid" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, order_id, cate_id, lottery_id, play_id, setting_id, play_name, issue, order_sn, bet_number, bet_count, bet_amount, win_amount, back_amount, god_order_id, tb_status, is_delete, win_count, is_push, create_time, update_time, source, family_id, studio_num, show_lottery_name, show_play_name, show_bet_number, pid
+    </sql>
+
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.sys.SlaveSysAppVersionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.SysAppVersion">
+        <id column="id" property="id" />
+        <result column="code" property="code" />
+        <result column="name" property="name" />
+        <result column="show_version" property="showVersion" />
+        <result column="upgrade_version" property="upgradeVersion" />
+        <result column="is_silent_download" property="isSilentDownload" />
+        <result column="down_url" property="downUrl" />
+        <result column="file_size" property="fileSize" />
+        <result column="app_type" property="appType" />
+        <result column="content" property="content" />
+        <result column="is_forced" property="isForced" />
+        <result column="status" property="status" />
+        <result column="create_time" property="createTime" />
+        <result column="create_user" property="createUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="merchant_code" property="merchantCode" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, code, name, show_version, upgrade_version, is_silent_download, down_url, file_size, app_type, content, is_forced, status, create_time, create_user, update_time, update_user, merchant_code
+    </sql>
+
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.pay.SlavePayChannelMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.PayChannel">
+        <id column="pay_channel_id" property="payChannelId" />
+        <result column="pay_way_id" property="payWayId" />
+        <result column="channel_name" property="channelName" />
+        <result column="channel_code" property="channelCode" />
+        <result column="status" property="status" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_user" property="createUser" />
+        <result column="update_user" property="updateUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        pay_channel_id, pay_way_id, channel_name, channel_code, status, is_delete, create_user, update_user, create_time, update_time
+    </sql>
+
+</mapper>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.pay.SlavePayWayMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.PayWay">
+        <id column="pay_way_id" property="payWayId"/>
+        <result column="provider_id" property="providerId"/>
+        <result column="country_code" property="countryCode"/>
+        <result column="pay_type_code" property="payTypeCode"/>
+        <result column="pay_way_name" property="payWayName"/>
+        <result column="pay_way_tag" property="payWayTag"/>
+        <result column="pay_way_icon" property="payWayIcon"/>
+        <result column="giving_type" property="givingType"/>
+        <result column="pay_way_giving_ratio" property="payWayGivingRatio"/>
+        <result column="min_amt" property="minAmt"/>
+        <result column="max_amt" property="maxAmt"/>
+        <result column="shortcut" property="shortcut"/>
+        <result column="is_input" property="isInput"/>
+        <result column="status" property="status"/>
+        <result column="sort_by" property="sortBy"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <resultMap id="PayWayListResultMap" type="com.onelive.common.model.vo.pay.PayWayVO">
+        <id column="pay_way_id" property="payWayId"/>
+        <result column="provider_id" property="providerId"/>
+        <result column="pay_type_code" property="payTypeCode"/>
+        <result column="country_code" property="countryCode"/>
+        <result column="pay_way_name" property="payWayName"/>
+        <result column="pay_way_icon" property="payWayIcon"/>
+        <result column="giving_type" property="givingType"/>
+        <result column="pay_way_giving_ratio" property="payWayGivingRatio"/>
+        <result column="min_amt" property="minAmt"/>
+        <result column="max_amt" property="maxAmt"/>
+        <result column="shortcut" property="shortcut"/>
+        <result column="is_input" property="isInput"/>
+    </resultMap>
+
+    <resultMap id="listPageResultMap" type="com.onelive.common.model.vo.pay.PayWayBackVO">
+        <id column="pay_way_id" property="payWayId"/>
+        <result column="provider_id" property="providerId"/>
+        <result column="country_code" property="countryCode"/>
+        <result column="provider_type" property="providerType"/>
+        <result column="provider_name" property="providerName"/>
+        <result column="bank_address" property="bankAddress"/>
+        <result column="param_value" property="bankName"/>
+        <result column="bank_account_name" property="bankAccountName"/>
+        <result column="pay_type_code" property="payTypeCode"/>
+        <result column="pay_type_name" property="payTypeName"/>
+        <result column="pay_way_name" property="payWayName"/>
+        <result column="pay_way_tag" property="payWayTag"/>
+        <result column="giving_type" property="givingType"/>
+        <result column="pay_way_giving_ratio" property="payWayGivingRatio"/>
+        <result column="min_amt" property="minAmt"/>
+        <result column="max_amt" property="maxAmt"/>
+        <result column="shortcut" property="shortcut"/>
+        <result column="is_input" property="isInput"/>
+        <result column="status" property="status"/>
+        <result column="sort_by" property="sortBy"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        pay_way_id
+        , provider_id,country_code, pay_type_code, pay_way_name, pay_way_tag,pay_way_icon, giving_type, pay_way_giving_ratio, min_amt, max_amt, shortcut, is_input, status, sort_by, create_user, update_user, create_time, update_time
+    </sql>
+
+    <select id="getPayWayList" resultMap="PayWayListResultMap">
+        select pay_way_id,
+               provider_id,
+               pay_type_code,
+               pay_way_icon,
+               pay_way_name,
+               giving_type,
+               pay_way_giving_ratio,
+               min_amt,
+               max_amt,
+               is_input
+        from pay_way
+        where
+            status = 1
+            and country_code =#{countryCode}
+    </select>
+
+    <select id="listPage" resultMap="listPageResultMap">
+        select
+        b.provider_name,
+        b.bank_address,
+        b.provider_type,
+        d.param_value,
+        b.bank_account_name,
+        c.pay_type_name,
+        a.*
+        from pay_way a
+        left Join pay_three_provider b on a.provider_id=b.provider_id
+        left join pay_type c on a.pay_type_code=c.pay_type_code
+        LEFT JOIN sys_bus_parameter d on b.bank_name=d.param_code
+        where 1=1
+        <if test="payWayName !=null and payWayName != '' ">
+            and a.pay_way_name like "%"#{payWayName}"%"
+        </if>
+        <if test="payTypeCode !=null and payTypeCode!=''">
+            and a.pay_type_code =#{payTypeCode}
+        </if>
+        <if test="countryCode !=null and countryCode!=''">
+            and a.country_code =#{countryCode}
+        </if>
+        <if test="status !=null ">
+            and a.status =#{status}
+        </if>
+        <if test="providerType !=null ">
+            and b.provider_type =#{providerType}
+        </if>
+    </select>
+
+</mapper>

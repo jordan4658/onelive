@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.live.LiveStudioListMapper">
+
+	<insert id="saveOrUpdate" useGeneratedKeys="false" keyProperty="studio_id">
+		  INSERT INTO live_studio_list (
+		  		user_id,
+		  		studio_num,
+		        studio_title,
+		        studio_background,
+				studio_thumb_image,
+		        studio_status,
+		        country_code,
+		  		colour,
+		  		product_id,
+		  		sharpness,
+		        try_see_time,
+		        merchant_code,
+		        game_id,
+		        update_time,
+		        start_time
+		    )
+		    values (
+		        #{userId},
+		        #{studioNum},
+		        #{studioTitle},
+		        #{studioBackground},
+		        #{studioThumbImage},
+		        #{studioStatus},
+		        #{countryCode},
+		        #{colour},
+		        #{productId},
+		        #{sharpness},
+		        #{trySeeTime},
+		        #{merchantCode},
+		        #{gameId},
+		        now(),
+		        now()
+		    )
+		    ON DUPLICATE KEY UPDATE
+		        user_id = #{userId},
+		        studio_num = #{studioNum},
+		        studio_title = #{studioTitle},
+		        studio_background = #{studioBackground},
+				studio_thumb_image = #{studioThumbImage},
+		        studio_status = #{studioStatus},
+		        country_code = #{countryCode},
+		  		colour = #{colour},
+		  		product_id = #{productId},
+		  		sharpness = #{sharpness},
+		  		try_see_time = #{trySeeTime},
+		  		merchant_code = #{merchantCode},
+		  		game_id = #{gameId},
+		       	update_time = now(),
+		       	start_time = now()
+	</insert>
+	
+	<update id="breakShow" parameterType="java.lang.Long">
+		UPDATE live_studio_list SET studio_status = 0 WHERE user_id = #{userId} LIMIT 1
+	</update> 
+</mapper>

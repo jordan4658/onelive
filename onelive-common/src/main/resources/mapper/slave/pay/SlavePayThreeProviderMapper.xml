@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.pay.SlavePayThreeProviderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.PayThreeProvider">
+        <id column="provider_id" property="providerId"/>
+        <result column="provider_name" property="providerName"/>
+        <result column="provider_type" property="providerType"/>
+        <result column="provider_code" property="providerCode"/>
+        <result column="back_url" property="backUrl"/>
+        <result column="allow_ips" property="allowIps"/>
+        <result column="get_order_url" property="getOrderUrl"/>
+        <result column="add_order_url" property="addOrderUrl"/>
+        <result column="agent_no" property="agentNo"/>
+        <result column="provider_app_id" property="providerAppId"/>
+        <result column="secret_code" property="secretCode"/>
+        <result column="pub_secret" property="pubSecret"/>
+        <result column="pri_secret" property="priSecret"/>
+        <result column="bank_name" property="bankName"/>
+        <result column="bank_account_no" property="bankAccountNo"/>
+        <result column="bank_account_name" property="bankAccountName"/>
+        <result column="bank_address" property="bankAddress"/>
+        <result column="status" property="status"/>
+        <result column="is_delete" property="isDelete"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+
+    <resultMap id="listPageResultMap" type="com.onelive.common.model.vo.pay.PayThreeProviderBackVO">
+        <id column="provider_id" property="providerId"/>
+        <result column="provider_name" property="providerName"/>
+        <result column="provider_type" property="providerType"/>
+        <result column="provider_code" property="providerCode"/>
+        <result column="back_url" property="backUrl"/>
+        <result column="allow_ips" property="allowIps"/>
+        <result column="torder_url" property="torderUrl"/>
+        <result column="pay_gateway" property="payGateway"/>
+        <result column="agent_no" property="agentNo"/>
+        <result column="provider_app_id" property="providerAppId"/>
+        <result column="secret_code" property="secretCode"/>
+        <result column="pub_secret" property="pubSecret"/>
+        <result column="pri_secret" property="priSecret"/>
+        <result column="bank_name" property="bankName"/>
+        <result column="param_value" property="bankNameValue"/>
+        <result column="bank_account_no" property="bankAccountNo"/>
+        <result column="bank_account_name" property="bankAccountName"/>
+        <result column="bank_address" property="bankAddress"/>
+        <result column="status" property="status"/>
+        <result column="is_delete" property="isDelete"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        provider_id
+        , provider_name, provider_type, provider_code, back_url, allow_ips, get_order_url, add_order_url, agent_no, provider_app_id, secret_code, pub_secret, pri_secret, bank_name, bank_account_no, bank_account_name, bank_address, status, is_delete, create_user, create_time, update_user, update_time
+    </sql>
+
+    <select id="getBankList" resultType="com.onelive.common.model.vo.pay.PayBankVO">
+        select provider_id       providerId,
+               bank_name         bankName,
+               bank_account_no   bankAccountNo,
+               bank_account_name bankAccountName,
+               bank_address      bankAddress
+        from pay_three_provider
+        where status = 1
+          and provider_type = #{type}
+    </select>
+
+    <select id="listPage" resultMap="listPageResultMap">
+        select
+        b.param_value,
+        a.*
+        from pay_three_provider a
+        left join sys_bus_parameter b on a.bank_name = b.param_code
+        where 1=1
+        <if test="providerType !=null">
+            and a.provider_type = #{providerType}
+        </if>
+        <if test="providerName !=null and providerName !=''  ">
+            and a.provider_name like CONCAT('%', #{providerName}, '%')
+        </if>
+    </select>
+
+    <select id="selectProviderList" resultType="com.onelive.common.model.vo.pay.PayThreeProviderSelectVO">
+        select
+        a.provider_id providerId,
+        a.provider_name providerName
+        from pay_three_provider a
+        where 1=1
+        <if test="providerType !=null">
+            and a.provider_type = #{providerType}
+        </if>
+
+    </select>
+
+    <select id="getByPayWayId" resultMap="BaseResultMap">
+        select
+        b.*
+        from pay_way a
+        left join  pay_three_provider b  on a.provider_id=b.provider_id
+        where a.pay_way_id=#{payWayId}
+    </select>
+
+
+</mapper>

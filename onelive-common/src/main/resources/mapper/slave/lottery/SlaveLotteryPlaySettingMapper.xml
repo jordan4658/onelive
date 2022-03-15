@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.lottery.SlaveLotteryPlaySettingMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.LotteryPlaySetting">
+        <id column="id" property="id" />
+        <result column="cate_id" property="cateId" />
+        <result column="play_id" property="playId" />
+        <result column="total_count" property="totalCount" />
+        <result column="win_count" property="winCount" />
+        <result column="single_money" property="singleMoney" />
+        <result column="example" property="example" />
+        <result column="example_num" property="exampleNum" />
+        <result column="play_remark" property="playRemark" />
+        <result column="play_remark_sx" property="playRemarkSx" />
+        <result column="reward" property="reward" />
+        <result column="matchtype" property="matchtype" />
+        <result column="win_count_bak" property="winCountBak" />
+        <result column="total_count_bak" property="totalCountBak" />
+        <result column="reward_level" property="rewardLevel" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="is_delete" property="isDelete" />
+        <result column="play_tag_id" property="playTagId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, cate_id, play_id, total_count, win_count, single_money, example, example_num, play_remark, play_remark_sx, reward, matchtype, win_count_bak, total_count_bak, reward_level, create_time, update_time, is_delete, play_tag_id
+    </sql>
+
+    <select id="listAllPlaySettingsWithLang" resultMap="BaseResultMap">
+        SELECT
+            setting.id,
+            setting.cate_id,
+            setting.play_id,
+            setting.total_count,
+            setting.win_count,
+            setting.single_money,
+            setting.reward,
+            lang.example,
+            lang.example_num,
+            lang.play_remark,
+            lang.play_remark_sx,
+            setting.matchtype,
+            setting.win_count_bak,
+            setting.total_count_bak,
+            setting.reward_level,
+            setting.create_time,
+            setting.update_time,
+            setting.is_delete,
+            setting.play_tag_id
+        FROM
+            lottery_play_setting setting
+                LEFT JOIN lottery_play_setting_lang lang ON setting.id = lang.setting_id
+        WHERE
+            setting.is_delete = 0
+          AND lang.lang = #{lang} AND lang.example != ''
+    </select>
+
+</mapper>

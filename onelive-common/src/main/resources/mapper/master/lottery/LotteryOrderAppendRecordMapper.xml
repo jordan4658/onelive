@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.lottery.LotteryOrderAppendRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.LotteryOrderAppendRecord">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="lottery_id" property="lotteryId" />
+        <result column="play_id" property="playId" />
+        <result column="setting_id" property="settingId" />
+        <result column="first_issue" property="firstIssue" />
+        <result column="bet_number" property="betNumber" />
+        <result column="bet_count" property="betCount" />
+        <result column="bet_price" property="betPrice" />
+        <result column="win_amount" property="winAmount" />
+        <result column="win_count" property="winCount" />
+        <result column="bet_multiples" property="betMultiples" />
+        <result column="double_multiples" property="doubleMultiples" />
+        <result column="append_count" property="appendCount" />
+        <result column="appended_count" property="appendedCount" />
+        <result column="type" property="type" />
+        <result column="win_stop" property="winStop" />
+        <result column="is_stop" property="isStop" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, lottery_id, play_id, setting_id, first_issue, bet_number, bet_count, bet_price, win_amount, win_count, bet_multiples, double_multiples, append_count, appended_count, type, win_stop, is_stop, is_delete, create_time, update_time
+    </sql>
+
+</mapper>

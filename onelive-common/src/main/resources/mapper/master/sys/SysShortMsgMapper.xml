@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.sys.SysShortMsgMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.SysShortMsg">
+        <id column="id" property="id"/>
+        <result column="mobile_phone" property="mobilePhone"/>
+        <result column="area_code" property="areaCode"/>
+        <result column="send_date" property="sendDate"/>
+        <result column="msg_type" property="msgType"/>
+        <result column="valid_date" property="validDate"/>
+        <result column="mas_code" property="masCode"/>
+        <result column="mas_status" property="masStatus"/>
+        <result column="send_ip" property="sendIp"/>
+        <result column="mas_body" property="masBody"/>
+        <result column="merchant_code" property="merchantCode"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id
+        , mobile_phone,area_code, send_date, msg_type, valid_date, mas_code, mas_status, send_ip,mas_body,mas_mas_remark,merchant_code
+    </sql>
+
+
+</mapper>

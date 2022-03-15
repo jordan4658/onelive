@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.mem.SlaveMemFocusUserMapper">
+
+     <select id="focusList" resultType="com.onelive.common.model.vo.live.FansUserVO">
+        SELECT
+			focus.focus_id,
+			us.avatar,
+			us.nick_name,
+			us.personal_signature,
+			us.user_level,
+			us.sex,
+			us.personal_signature,
+			focus.create_time,
+			us.user_type
+		FROM
+			mem_focus_user focus
+		LEFT JOIN mem_user us ON us.id = focus.focus_id
+		WHERE
+			focus.user_id = #{userId}
+		ORDER BY focus.create_time
+    </select>
+    
+    
+     <select id="fansList" resultType="com.onelive.common.model.vo.live.FansUserVO">
+	    SELECT
+			focus.user_id,
+			us.avatar,
+			us.nick_name,
+			us.personal_signature,
+			us.user_level,
+			us.sex,
+			us.personal_signature,
+			us.user_type
+		FROM
+			mem_focus_user focus
+		LEFT JOIN mem_user us ON us.id = focus.user_id
+		WHERE
+			focus.focus_id = #{focusId}
+		ORDER BY focus.create_time
+	</select>
+	
+     <select id="getList" resultType="com.onelive.common.model.vo.mem.FocusUserVo" 
+     			parameterType="com.onelive.common.model.vo.mem.FocusUserVo">
+	  	SELECT 
+	  		muser1.nick_name nickName,
+	  		muser2.nick_name nickNameAnchor,
+	  		muser1.user_account userAccount,
+	  		muser2.user_account userAccountAnchor,
+	  		IFNULL(focus.award, 0)award,
+	  		focus.is_focus,
+	  		focus.create_time
+		FROM mem_focus_user focus 
+			LEFT JOIN mem_user muser1 on muser1.id = focus.user_id
+			LEFT JOIN mem_user muser2 on muser2.id = focus.focus_id 
+		<where>
+			 <if test="startTime != null and startTime != '' ">
+	            AND focus.create_time >= #{startTime}
+	        </if>
+	        <if test="endTime != null and endTime != '' ">
+	            AND focus.create_time <![CDATA[ < ]]> #{endTime}
+	        </if>
+	        <if test="userAccountAnchor != null and userAccountAnchor != '' ">
+	            AND muser2.user_account = #{userAccountAnchor}
+	        </if>
+	        <if test="userAccount != null and userAccount != '' ">
+	            AND muser1.user_account = #{userAccount}
+	        </if>
+	        <if test="countryId != null">
+	            AND muser1.country_id = #{countryId}
+	        </if>
+	        <if test="countryId != null">
+	            AND muser1.country_id = #{countryId}
+	        </if>
+		</where>
+	</select>
+	
+     <select id="fansCount" resultType="java.lang.Integer">
+	  	SELECT count(id)
+		FROM mem_focus_user focus where is_focus = 1 and focus_id = #{focusId}
+	</select>
+
+</mapper>

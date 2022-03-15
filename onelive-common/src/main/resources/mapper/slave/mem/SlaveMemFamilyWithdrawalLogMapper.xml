@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.mem.SlaveMemFamilyWithdrawalLogMapper">
+
+	<select id="financialRecord" resultType="com.onelive.common.model.vo.mem.FamilyFinancialRecord">
+		SELECT t.* FROM  (
+			SELECT create_time, amount, 2 type FROM mem_goldchange WHERE flow_type = 1 AND change_type = 3 AND account = #{userAccount}
+			
+			UNION ALL
+			
+			SELECT create_time, withdrawal, 1 type FROM  mem_family_withdrawal_log WHERE family_id = #{familyId}
+		) t 
+		<where>
+			<if test="type != null">
+				t.type = #{type}
+			</if>
+		</where>
+		ORDER BY t.create_time DESC
+	</select>
+
+
+</mapper>

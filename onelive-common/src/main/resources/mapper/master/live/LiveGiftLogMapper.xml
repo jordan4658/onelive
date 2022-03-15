@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.platform.LiveGiftLogMapper">
+
+
+	<select id="selectSumBystudioLogId" resultType="com.onelive.common.model.dto.platform.StudioLogLiveGiftDto">
+	 SELECT
+		SUM(t.giftTotal) giftTotal,
+		SUM(t.barrageTotal) barrageTotal
+	FROM
+		(
+		SELECT
+			IFNULL(SUM(gift_number * gift_price),0) giftTotal,
+			0 barrageTotal
+		FROM
+			live_gift_log log
+		LEFT JOIN live_gift gift ON gift.gift_id = log.gift_id
+		WHERE
+			log.studio_log_id = #{logId}
+		AND gift.gift_type != 8
+		
+		UNION ALL
+		
+		SELECT
+			0 giftTotal,
+			IFNULL(SUM(gift_number * gift_price),0) barrageTotal
+		FROM
+			live_gift_log log
+		LEFT JOIN live_gift gift ON gift.gift_id = log.gift_id
+		WHERE
+			log.studio_log_id = #{logId}
+		AND gift.gift_type = 8
+	) t
+	</select>
+	
+
+</mapper>

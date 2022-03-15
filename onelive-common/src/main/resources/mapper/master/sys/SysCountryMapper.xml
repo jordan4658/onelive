@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.sys.SysCountryMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.SysCountry">
+        <id column="id" property="id" />
+        <result column="zh_name" property="zhName" />
+        <result column="en_name" property="enName" />
+        <result column="area_code" property="areaCode" />
+        <result column="country_code" property="countryCode" />
+        <result column="lang" property="lang" />
+        <result column="lang_zh" property="langZh" />
+        <result column="local_currency" property="localCurrency" />
+        <result column="exchange_rate" property="exchangeRate" />
+        <result column="time_zone" property="timeZone" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="merchant_code" property="merchantCode" />
+        <result column="is_frozen" property="isFrozen" />
+        <result column="sort" property="sort" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, zh_name, en_name, area_code, country_code, lang, lang_zh, local_currency, exchange_rate, time_zone, create_time, update_time, merchant_code, is_frozen, sort
+    </sql>
+
+</mapper>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.mem.SlaveMemGroupCurrencyCfgMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.MemGroupCurrencyCfg">
+        <id column="group_currency_id" property="groupCurrencyId"/>
+        <result column="user_group_id" property="userGroupId"/>
+        <result column="currency_code" property="currencyCode"/>
+        <result column="max_deposit" property="maxDeposit"/>
+        <result column="total_deposit" property="totalDeposit"/>
+        <result column="total_dispensing" property="totalDispensing"/>
+        <result column="is_delete" property="isDelete"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        group_currency_id
+        , user_group_id, currency_code, max_deposit, total_deposit, total_dispensing, is_delete,create_user, update_user, create_time, update_time
+    </sql>
+
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.mem.SlaveMemFamilyMapper">
+
+    <select id ="getList" resultType="com.onelive.common.model.vo.mem.MemFamilyListVO">
+		 SELECT
+			family.id,
+			family.family_name,
+			family.user_id,
+			mu.is_frozen,
+			SUM(anwallet.amount) + wallet.amount generalAssets,
+			mu.nick_name,
+			mu.register_area_code,
+		    mu.mobile_phone,
+			family.gift_ratio,
+			mu.remark,
+			mu.user_account,
+			mu.created_by,
+			mu.register_country_code,
+			mu.register_time,
+			COUNT(anchor.id) anchorCount
+		FROM
+			mem_family family
+		LEFT JOIN mem_user mu ON mu.id = family.user_id
+		LEFT JOIN mem_user_anchor anchor ON family.id = anchor.family_id
+		LEFT JOIN mem_wallet wallet ON wallet.user_id = family.user_id AND wallet.wallet_type = 1
+		LEFT JOIN mem_wallet anwallet ON anwallet.user_id = anchor.user_id AND anwallet.wallet_type = 1
+		WHERE mu.user_type = 3
+			<if test="registerCountryCode != null and registerCountryCode != ''">
+				AND mu.register_country_code = #{registerCountryCode}
+	        </if>
+			<if test="userAccount != null and userAccount != ''">
+				AND mu.user_account = #{userAccount}
+			</if>
+			<if test="familyName != null and familyName != ''">
+				AND family.family_name = #{familyName}
+			</if>
+	        <if test="startTime != null and startTime != ''">
+				AND mu.register_time >= #{startTime}
+	        </if>
+	        <if test="endTime != null and endTime != ''">
+				AND mu.register_time &lt; #{endTime}
+	        </if>
+	        GROUP BY family.id
+	</select>
+
+</mapper>

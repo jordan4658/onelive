@@ -1,0 +1,18 @@
+package com.onelive.common.model.req.sys;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+/**
+ * @ClassName SysCacheReq
+ * @Desc 缓存的刷新请求类
+ * @Date 2021/4/6 11:48
+ */
+@Data
+@ApiModel
+public class SysCacheKeyReq {
+    @ApiModelProperty("缓存key值")
+    private String key;
+}    
+    

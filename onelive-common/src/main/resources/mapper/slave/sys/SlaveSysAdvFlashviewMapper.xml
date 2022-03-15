@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.sys.SlaveSysAdvFlashviewMapper">
+
+	<select id="getAdvByType" resultType="com.onelive.common.mybatis.entity.SysAdvFlashviewLang">
+        SELECT 
+        	flashview.id,
+			lang.flashview_name,
+			lang.skip_model,
+			lang.skip_url,
+			lang.img_url
+       	FROM sys_adv_flashview flashview 
+        	LEFT JOIN sys_adv_flashview_lang lang ON lang.flashview_id = flashview.id
+       	WHERE lang.flashview_name IS NOT NULL AND lang.flashview_name != ''
+       		AND flashview.type_code = #{flashviewType} AND lang.lang = #{lang} AND is_show = 1
+     		AND lang.start_date &lt;= #{now} AND lang.end_date >= #{now}
+    </select>
+
+
+
+	
+</mapper>

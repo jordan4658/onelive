@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.sys.SysBlacklistMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.SysBlacklist">
+        <id column="id" property="id" />
+        <result column="ip" property="ip" />
+        <result column="remark" property="remark" />
+        <result column="ip_status" property="ipStatus" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_time" property="createTime" />
+        <result column="create_user" property="createUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="merchant_code" property="merchantCode" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, ip, ip_status,remark, is_delete,create_time, create_user, update_time, update_user, merchant_code
+    </sql>
+
+</mapper>

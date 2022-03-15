@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.mem.SlaveMemLevelVipMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.MemLevelVip">
+        <id column="id" property="id" />
+        <result column="level_weight" property="levelWeight" />
+        <result column="level_name" property="levelName" />
+        <result column="level_icon" property="levelIcon" />
+        <result column="special_effects" property="specialEffects" />
+        <result column="promotion_recharge" property="promotionRecharge" />
+        <result column="name_color" property="nameColor" />
+        <result column="chat_color" property="chatColor" />
+        <result column="barrage_color" property="barrageColor" />
+        <result column="vip_right" property="vipRight" />
+        <result column="merchant_code" property="merchantCode" />
+        <result column="create_time" property="createTime" />
+        <result column="create_user" property="createUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_user" property="updateUser" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, level_weight, level_name, level_icon, special_effects, promotion_recharge, name_color, chat_color, barrage_color, vip_right, merchant_code, create_time, create_user, update_time, update_user
+    </sql>
+
+    <select id="getMaxUpgradeableLevelByEmpirical" resultMap="BaseResultMap">
+        SELECT *
+        FROM mem_level_vip
+        WHERE promotion_recharge &lt;= #{empiricalValue}
+        ORDER BY promotion_recharge DESC LIMIT 1
+    </select>
+
+</mapper>

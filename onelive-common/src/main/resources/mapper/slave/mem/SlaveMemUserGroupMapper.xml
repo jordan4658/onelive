@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.mem.SlaveMemUserGroupMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.MemUserGroup">
+        <id column="user_group_id" property="userGroupId"/>
+        <result column="group_name" property="groupName"/>
+        <result column="currency_code" property="currencyCode"/>
+        <result column="remark" property="remark"/>
+        <result column="is_invitation_rebates" property="isInvitationRebates"/>
+        <result column="withdrawals_times" property="withdrawalsTimes"/>
+        <result column="deposit_times" property="depositTimes"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="is_delete" property="isDelete"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        user_group_id , currency_code
+        , group_name, remark, is_invitation_rebates, withdrawals_times, deposit_times, start_time, end_time,is_delete, create_user, update_user, create_time, update_time
+    </sql>
+    <select id="pageList" resultType="com.onelive.common.model.vo.mem.MemUserGroupVO">
+        select <include refid="Base_Column_List"></include> from mem_user_group where is_delete=false
+        <if test="currencyCode !=null and currencyCode!='' ">
+            and currency_code=#{currencyCode}
+        </if>
+    </select>
+    
+    <select id="getMemUserGroupManageList" parameterType="com.onelive.common.model.req.mem.MemUserGroupManageReq"
+            resultType="com.onelive.common.model.vo.mem.MemUserGroupManageVO">
+        SELECT
+        b.id userId,
+        a.account userAccount,
+        IF( a.pay_num is null ,0,a.pay_num) depositTimes,
+        IF( a.sum_recharge_amount is null ,0,a.sum_recharge_amount) totalDeposit,
+        IF( a.pay_max is null ,0,a.pay_max) maxDeposit,
+        IF( a.withdrawal_num is null ,0,a.withdrawal_num) withdrawalsTimes,
+        IF( a.sum_withdraw_amount is null ,0,a.sum_withdraw_amount) totalDispensing,
+        b.nick_name userNickName,
+        b.country_id currencyId,
+        IF( b.is_frozen is null ,0,b.is_frozen) isFrozen,
+        b.register_time registerTime,
+        IF( b.user_level is null ,0,b.user_level) userLevel
+        FROM
+        mem_user b
+        LEFT JOIN mem_wallet a ON a.user_id = b.id
+        WHERE
+        <!-- 国家ID -->
+        b.group_id = #{userGroupId}
+        <if test="currencyId !=null">
+            and b.country_id = #{currencyId}
+        </if>
+        <!-- 用户账号 -->
+        <if test="userAccount !=null and userAccount!='' ">
+            AND a.account = ''
+        </if>
+        <!-- 参数条件：0全部（12345）、1入款次数、2入款总额、3最大存款金额、4出款次数、5出款总额 -->
+        <!-- 最小值 -->
+        <if test="minNum !=null">
+            <if test="paraWhere ==0 or paraWhere==1">
+                <!-- 入款次数 -->
+                AND a.pay_num &gt;= #{minNum}
+            </if>
+            <if test="paraWhere ==0 or paraWhere==2">
+                <!-- 入款总额 -->
+                AND a.sum_recharge_amount &gt;= #{minNum}
+            </if>
+            <if test="paraWhere ==0 or paraWhere==3 ">
+                <!-- 最大存款金额 -->
+                AND a.pay_max &gt;= #{minNum}
+            </if>
+            <if test="paraWhere ==0 or paraWhere==4 ">
+                <!-- 出款次数 -->
+                AND a.withdrawal_num &gt;= #{minNum}
+            </if>
+            <if test="paraWhere ==0 or paraWhere==5 ">
+                <!-- 出款总额 -->
+                AND a.sum_withdraw_amount &gt;= #{minNum}
+            </if>
+        </if>
+        <!-- 最大值 -->
+        <if test=" maxNum !=null">
+            <if test="paraWhere ==0 or paraWhere==1">
+                <!-- 入款次数 -->
+                AND a.pay_num &lt;= #{maxNum}
+            </if>
+            <if test="paraWhere ==0 or paraWhere==2">
+                <!-- 入款总额 -->
+                AND a.sum_recharge_amount &lt;= #{maxNum}
+            </if>
+            <if test="paraWhere ==0 or paraWhere==3 ">
+                <!-- 最大存款金额 -->
+                AND a.pay_max &lt;= #{maxNum}
+            </if>
+            <if test="paraWhere ==0 or paraWhere==4 ">
+                <!-- 出款次数 -->
+                AND a.withdrawal_num &lt;= #{maxNum}
+            </if>
+            <if test="paraWhere ==0 or paraWhere==5 ">
+                <!-- 出款总额 -->
+                AND a.sum_withdraw_amount &lt;= #{maxNum}
+            </if>
+        </if>
+
+
+        <!-- 用户名称 -->
+        <if test="userNickName !=null and userNickName!='' ">
+            AND b.nick_name = #{userNickName}
+        </if>
+        <!-- 注册时间 -->
+        <if test="userNickName !=null and userNickName!='' ">
+            AND b.register_time BETWEEN #{startTime}
+            AND #{endTime}
+        </if>
+        <!-- 账号状态 -->
+        <if test="isFrozen !=null ">
+            AND b.is_frozen = #{isFrozen}
+        </if>
+        <!-- 用户等级 -->
+        <if test="userLevel !=null  ">
+            AND b.user_level = #{userLevel}
+        </if>
+
+    </select>
+
+
+</mapper>

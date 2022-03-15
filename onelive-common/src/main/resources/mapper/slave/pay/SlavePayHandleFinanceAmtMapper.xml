@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.pay.SlavePayHandleFinanceAmtMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.PayHandleFinanceAmt">
+        <id column="handle_finance_amt_id" property="handleFinanceAmtId"/>
+        <result column="account" property="account"/>
+        <result column="handle_type" property="handleType"/>
+        <result column="handle_num_type" property="handleNumType"/>
+        <result column="handle_num" property="handleNum"/>
+        <result column="handle_explain" property="handleExplain"/>
+        <result column="is_delete" property="isDelete"/>
+        <result column="is_dm" property="isDm"/>
+        <result column="handle_order_no" property="handleOrderNo"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+
+    <resultMap id="listPageBaseResultMap" type="com.onelive.common.model.vo.pay.PayHandleFinanceAmtBackVO">
+        <id column="handle_finance_amt_id" property="handleFinanceAmtId"/>
+        <result column="user_account" property="account"/>
+        <result column="nick_name" property="nickname"/>
+        <result column="accno" property="accno"/>
+        <result column="user_type" property="userType"/>
+        <result column="amount" property="walletAmount"/>
+        <result column="silver_bean" property="walletSilverBean"/>
+        <result column="account_dml" property="accountDml"/>
+        <result column="sum_account_dml" property="sumAccountDml"/>
+        <result column="sum_recharge_amount" property="sumRechargeAmount"/>
+        <result column="sum_withdraw_amount" property="sumWithdrawAmount"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        handle_finance_amt_id
+        , account, handle_type,handle_num_type, handle_num, handle_explain, handle_order_no,is_delete,is_dm, create_user, update_user, create_time, update_time
+    </sql>
+
+
+    <select id="listPage" resultMap="listPageBaseResultMap">
+        SELECT
+        a.nick_name,
+        a.accno,
+        a.user_type,
+        a.user_account,
+        b.amount,
+        b.silver_bean,
+        b.account_dml,
+        b.sum_account_dml,
+        b.sum_recharge_amount,
+        b.sum_withdraw_amount
+        FROM
+        mem_user a
+        LEFT JOIN mem_wallet b ON a.user_account = b.account
+        where 1=1
+          and b.wallet_type=1
+        <if test="account !=null and account!= ''  ">
+            and a.user_account=#{account}
+        </if>
+        <if test="accno !=null and accno!= ''  ">
+            and a.accno=#{accno}
+        </if>
+        <if test="nickname !=null and nickname!= '' ">
+            and a.nick_name like "%"#{nickname}"%"
+        </if>
+        order by  a.register_time desc
+    </select>
+
+    <select id="queryHandleSummary" resultType="com.onelive.common.model.dto.report.HandleDTO">
+        select IFNULL(sum(handle_num), 0) as totalMoney, count(distinct (account)) as totalPeople
+        from pay_handle_finance_amt
+        where handle_type = 11
+          and create_time between #{startDate} and #{endDate}
+    </select>
+
+    <select id="getArtificialAmt" resultType="com.onelive.common.model.vo.report.ArtificialAmtVO">
+        select a.handle_type handleType, sum(a.handle_num) artificialAmt
+        from pay_handle_finance_amt a
+        where a.handle_type in (10, 11) and create_time between #{startTime} and #{endTime}
+        group by a.handle_type
+    </select>
+
+</mapper>

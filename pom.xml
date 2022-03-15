@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.onelive</groupId>
+    <artifactId>onelive</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <spring.cloud.starter>2.2.5.RELEASE</spring.cloud.starter>
+        <mybatis-plus.version>3.3.2</mybatis-plus.version>
+        <pagehelper.starter.version>1.2.13</pagehelper.starter.version>
+        <druid.version>1.1.22</druid.version>
+        <velocity-engine.version>2.0</velocity-engine.version>
+        <easyexcel.version>2.2.6</easyexcel.version>
+        <springfox-swagger-ui.version>2.5.0</springfox-swagger-ui.version>
+        <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
+        <swagger-models.version>1.6.0</swagger-models.version>
+        <swagger-annotations.version>1.6.0</swagger-annotations.version>
+        <activation.version>1.1.1</activation.version>
+        <libphonenumber.version>8.12.8</libphonenumber.version>
+        <redisson.version>3.13.2</redisson.version>
+        <hutool.version>5.4.2</hutool.version>
+        <fastjson.version>1.2.7</fastjson.version>
+        <transmittable-thread-local.version>2.2.0</transmittable-thread-local.version>
+        <txlcn.version>5.0.2.RELEASE</txlcn.version>
+        <nacos-config.version>2.2.1.RELEASE</nacos-config.version>
+        <job-core.version>2.2.0</job-core.version>
+        <easyexcel.version>2.2.6</easyexcel.version>
+        <pool2.version>2.7.0</pool2.version>
+        <reactive.vesion>2.1.9.RELEASE</reactive.vesion>
+        <skywalking.version>8.1.0</skywalking.version>
+        <logstash.version>6.1</logstash.version>
+        <aws.version>1.11.1021</aws.version> <!--<aws.version>1.11.592</aws.version>-->
+    </properties>
+
+    <modules>
+        <module>onelive-common</module>
+        <module>onelive-gateway</module>
+        <module>onelive-api</module>
+        <module>onelive-job</module>
+        <module>onelive-third</module>
+        <module>onelive-manage</module>
+        <module>onelive-pay</module>
+        <module>mongodb</module>
+        <module>onelive-live</module>
+        <module>onelive-websocket</module>
+        <module>onelive-websocket-common</module>
+        <module>onelive-anchor</module>
+    </modules>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.3.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- lang3 util -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <!-- lettuce pool 缓存连接池 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <!--json解析-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+        <!--提供对http服务器的访问功能-->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+        <!--保证ThreadLocal变量一致-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>transmittable-thread-local</artifactId>
+            <version>${transmittable-thread-local.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <!-- 引入Spring Cloud的依赖，管理Spring Cloud生态各个组件 https://github.com/spring-projects/spring-cloud/wiki/Spring-Cloud-Hoxton-Release-Notes -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Hoxton.SR8</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

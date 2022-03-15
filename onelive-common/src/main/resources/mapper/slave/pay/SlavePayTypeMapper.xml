@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.pay.SlavePayTypeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.PayType">
+        <id column="pay_type_id" property="payTypeId"/>
+        <result column="pay_type_code" property="payTypeCode"/>
+        <result column="pay_type_name" property="payTypeName"/>
+        <result column="icon_url" property="iconUrl"/>
+        <result column="is_enable" property="isEnable"/>
+        <result column="is_hot" property="isHot"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <resultMap id="PayTypeBackVOResultMap" type="com.onelive.common.model.vo.pay.PayTypeBackVO">
+        <id column="pay_type_id" property="payTypeId"/>
+        <result column="pay_type_code" property="payTypeCode"/>
+        <result column="pay_type_name" property="payTypeName"/>
+        <result column="icon_url" property="iconUrl"/>
+        <result column="is_enable" property="isEnable"/>
+        <result column="is_hot" property="isHot"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        pay_type_id
+        , pay_type_code, pay_type_name, icon_url, is_enable, is_hot, create_user, update_user, create_time, update_time
+    </sql>
+
+    <select id="getPayTypeList" resultType="com.onelive.common.model.vo.pay.PayTypeVO">
+        select pay_type_id payTypeId, pay_type_name payTypeName, pay_type_code payTypeCode, is_hot isHot,icon_url iconUrl
+        from pay_type
+        where is_enable = true
+    </select>
+    <select id="listPage" resultMap="PayTypeBackVOResultMap">
+        select <include refid="Base_Column_List"></include> from pay_type
+        where 1=1
+        <if test="payTypeName !=null and payTypeName != ''">
+            and pay_type_name like "%"#{payTypeName}"%"
+        </if>
+    </select>
+
+    <select id="select" resultType="com.onelive.common.model.vo.pay.PayTypeSelectVO">
+        select pay_type_code,pay_type_name from  pay_type
+            where is_enable = true
+    </select>
+
+</mapper>

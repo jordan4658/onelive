@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.live.SlaveLiveStudioListMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.LiveStudioList">
+        <id column="studio_id" property="studioId" />
+
+        <result column="studio_title" property="studioTitle" />
+        <result column="user_id" property="userId" />
+        <result column="country_code" property="countryCode" />
+        <result column="sharpness" property="sharpness" />
+        <result column="colour" property="colour" />
+        <result column="studio_open_area" property="studioOpenArea" />
+        <result column="studio_status" property="studioStatus" />
+        <result column="studio_live_path" property="studioLivePath" />
+        <result column="studio_live_voice_path" property="studioLiveVoicePath" />
+        <result column="studio_live_push_flow" property="studioLivePushFlow" />
+        <result column="column_code" property="columnCode" />
+        <result column="studio_background" property="studioBackground" />
+        <result column="studio_thumbImage" property="studioThumbImage" />
+        <result column="is_first" property="isFirst" />
+        <result column="updated_by" property="updatedBy" />
+        <result column="created_by" property="createdBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+        <result column="merchant_code" property="merchantCode" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        studio_id, studio_num, studio_title, user_id, country_code, sharpness, colour, studio_open_area, studio_status, studio_live_path, studio_live_voice_path, studio_live_push_flow, column_code, studio_background, studio_thumbImage, is_first, updated_by, created_by, update_time, create_time, merchant_code
+    </sql>
+
+
+    <select id="getList" parameterType="com.onelive.common.model.req.live.LiveStudioListReq"
+            resultType="com.onelive.common.model.vo.live.LiveStudioListManegeVO">
+    	SELECT
+	        sto.studio_id,
+	        sto.studio_num,
+	        sto.studio_live_path,
+	        sto.user_id,
+	        sto.is_promotion,
+	        sto.studio_status,
+	        sto.is_first,
+	        sto.column_code, 
+	        sto.studio_background,
+	        sto.studio_thumb_image,
+	        sto.studio_title,
+	        sto.updated_by, 
+	        sto.created_by,
+	        sto.update_time,
+	        sto.create_time,
+	        sto.sharpness,
+	        sto.sort_num,
+	        sto.colour,
+	        sto.game_id,
+	        sto.start_time,
+	        sto.is_fixed,
+			family.family_name,
+	        sto.city_name,
+	        sto.country_code,
+	        sto.studio_live_push_flow,
+	        sto.studio_live_voice_path,
+	        muser.nick_name,
+	        muser.user_account,
+	        lottery.lottery_name gameName,
+	        slog.start_time startTime,
+	        scountry.country_name,
+	        slog.device,
+	        slog.log_id,
+			gift.gift_type,
+			TRUNCATE(IFNULL(SUM(lgift.gift_number * gift_price), 0), 2) giftMoney,
+			COUNT(DISTINCT lgift.giving_id) givingCount,
+			TRUNCATE(IFNULL(SUM(bet.bet_amount), 0), 2) betMoney,
+			COUNT(bet.id) betCount,
+			COUNT(DISTINCT bet.user_id) betUserCount
+        FROM live_studio_list sto
+	        LEFT JOIN mem_user muser on sto.user_id = muser.id
+			LEFT JOIN mem_user_anchor anchor on anchor.user_id = sto.user_id
+			LEFT JOIN mem_family family on family.id = anchor.family_id
+			LEFT JOIN lottery_lang lottery on lottery.lottery_id = sto.game_id AND lottery.lang = #{lang}
+			LEFT JOIN sys_country scountry ON sto.country_code = scountry.country_code
+			LEFT JOIN live_gift gift ON gift.gift_id = sto.product_id
+			LEFT JOIN 
+					(SELECT * FROM live_studio_log GROUP BY studio_num ORDER BY start_time DESC) slog ON slog.studio_num = sto.studio_num 
+			LEFT JOIN live_gift_log lgift ON lgift.studio_log_id = slog.log_id	
+			LEFT JOIN lottery_order_bet_record bet ON bet.studio_num =  sto.studio_num
+			WHERE muser.user_type = 2
+	        <if test="nickName != null and nickName != ''">
+	            AND muser.nick_name = #{nickName}
+	        </if>
+	        <if test="startTime != null  and startTime != '' ">
+	            AND sto.create_time >= #{startTime}
+	        </if>
+	        <if test="gameId != null">
+	            AND sto.game_id = #{gameId}
+	        </if>
+	        <if test="studioStatus != null">
+	            AND sto.studio_status = #{studioStatus}
+	        </if>
+	        <if test="endTime != null and endTime != ''">
+	            AND sto.create_time &lt; #{endTime}
+	        </if>
+	        <if test="countryCode != null and countryCode != ''">
+	            AND sto.country_code = #{countryCode}
+	        </if>
+	        <if test="colour != null and colour != ''">
+	            AND sto.colour = #{colour}
+	        </if>
+	        <if test="merchantCode != null and merchantCode != ''">
+	            AND sto.merchant_code = #{merchantCode}
+	        </if>
+	        <if test="familyName != null and familyName != ''">
+	            AND family.familyName = #{familyName}
+	        </if>
+	        <if test="userAccount != null and userAccount != ''">
+	            AND muser.user_account = #{userAccount}
+	        </if>
+        GROUP BY sto.studio_num
+    </select>
+
+    <select id="getRecommendByHeat" resultType="com.onelive.common.model.vo.live.LiveStudioListForIndexVO">
+        SELECT
+	        sto.studio_id,
+	        sto.studio_num,
+	        sto.user_id,
+			anchor.id anchor_id,
+	        sto.studio_status,
+	        sto.country_code,
+	        sto.is_first,
+	        sto.game_id,
+	        sto.column_code,
+	        sto.studio_background,
+	        sto.studio_thumb_image,
+	        sto.studio_title,
+	        lottery.lottery_name game_name,
+	      	sto.sharpness,
+	      	sto.colour,
+	      	sto.is_fixed,
+	      	sto.city_name,
+	        muser.nick_name,
+	        country.country_name
+        FROM live_studio_list sto
+        LEFT JOIN mem_user muser ON sto.user_id = muser.id
+		LEFT JOIN mem_user_anchor anchor ON anchor.user_id=sto.user_id
+        LEFT JOIN sys_country country ON sto.country_code = country.country_code
+       	LEFT JOIN lottery_lang lottery ON lottery.lottery_id = sto.game_id AND lottery.lang = #{lang}
+        WHERE sto.studio_status = 1
+        AND is_first != -1
+        <if test="nikeName != null and nikeName != ''">
+            and muser.nick_name = #{nikeName}
+        </if>
+        <if test="startTime != null">
+            and sto.create_time >= #{startTime}
+        </if>
+        <if test="endTime != null">
+            and sto.create_time &lt; #{endTime}
+        </if>
+        <if test="countryCode != null and countryCode != ''">
+            and sto.country_code = #{countryCode}
+        </if>
+        <if test="colour != null and colour != ''">
+            and sto.colour = #{colour}
+        </if>
+        <if test="merchantCode != null and merchantCode != ''">
+            and sto.merchant_code = #{merchantCode}
+        </if>
+    </select>
+    
+     <select id="getLiveFocusRecommendList"  resultType="com.onelive.common.model.vo.live.LiveStudioListForIndexVO">
+        SELECT
+	        sto.studio_id,
+	        sto.studio_num,
+	        sto.country_code,
+	        sto.user_id,
+			anchor.id anchor_id,
+	        sto.game_id,
+	        sto.studio_status,
+	        sto.is_first,
+	        lottery.lottery_name gameName,
+	        sto.column_code,
+	        sto.studio_background,
+	        sto.studio_thumb_image,
+	        sto.studio_title,
+	      	sto.sharpness,
+	      	sto.colour,
+	      	sto.is_fixed,
+	      	sto.city_name,
+	        muser.nick_name,
+	        country.country_name,
+			IF(sto.game_id>0,1,0) is_light_year_recommend,
+			IF(sto.product_id>0,1,0) is_charge,
+			gift.gift_type charge_type,
+			gift.price
+        FROM live_studio_list sto 
+			LEFT JOIN sys_country country ON sto.country_code = country.country_code
+			LEFT JOIN lottery_lang lottery ON lottery.lottery_id = sto.game_id AND lottery.lang = #{lang}
+			LEFT JOIN mem_user muser ON sto.user_id = muser.id
+			LEFT JOIN live_gift gift ON gift.gift_id=sto.product_id
+			LEFT JOIN mem_user_anchor anchor ON anchor.user_id=sto.user_id
+        WHERE sto.studio_status = 1
+        	AND sto.merchant_code = #{merchantCode} AND sto.studio_num NOT IN
+       	(SELECT  studio.studio_num  FROM mem_focus_user focus 
+			LEFT JOIN live_studio_list studio ON studio.user_id = focus.focus_id
+		WHERE focus.user_id = #{userId} AND studio.studio_status = 1)
+        ORDER BY RAND() LIMIT 10 
+    </select>
+    
+     <select id="getLiveRecommendList"  resultType="com.onelive.common.model.vo.live.LiveStudioListForIndexVO">
+        SELECT
+	        sto.studio_id,
+	        sto.studio_num,
+	        sto.user_id,
+			anchor.id anchor_id,
+	        sto.game_id,
+	        sto.studio_status,
+	        sto.is_first,
+	        lottery.lottery_name gameName,
+	        sto.column_code,
+	        sto.studio_background,
+	        sto.studio_thumb_image,
+	        sto.country_code,
+	        sto.studio_title,
+	      	sto.sharpness,
+	      	sto.colour,
+	      	sto.is_fixed,
+	      	sto.city_name,
+	        muser.nick_name,
+	        country.country_name,
+			IF(sto.game_id>0,1,0) is_light_year_recommend,
+			IF(sto.product_id>0,1,0) is_charge,
+			gift.gift_type charge_type,
+			gift.price
+        FROM live_studio_list sto 
+        LEFT JOIN sys_country country ON sto.country_code = country.country_code
+        LEFT JOIN lottery_lang lottery ON lottery.lottery_id = sto.game_id AND lottery.lang = #{lang}
+        LEFT JOIN mem_user muser ON sto.user_id = muser.id
+		LEFT JOIN live_gift gift ON gift.gift_id=sto.product_id
+		LEFT JOIN mem_user_anchor anchor ON anchor.user_id=sto.user_id
+        WHERE sto.studio_status = 1
+        AND sto.merchant_code = #{merchantCode} AND sto.studio_num != #{studioNum}
+        ORDER BY RAND() LIMIT 10 
+    </select>
+
+     <select id="getRecommendByHeatNew"  resultType="com.onelive.common.model.dto.index.LiveStudioListForIndexDTO">
+        SELECT
+	        sto.studio_id,
+	        sto.studio_num,
+			sto.city_name,
+	        sto.user_id,
+			anchor.id anchor_id,
+			sto.is_fixed,
+	        sto.is_first,
+	        lottery.lottery_name game_name,
+	        sto.game_id,
+	        sto.try_see_time,
+	      	sto.sharpness,
+	        sto.studio_status,
+	        sto.country_code,
+	        country.country_name,
+	      	sto.colour,
+	        sto.column_code,
+	        sto.studio_background,
+	        sto.studio_thumb_image,
+	        sto.studio_title,
+            sto.sort_num,
+			sto.start_time,
+			IF(sto.game_id>0,1,0) is_light_year_recommend,
+			IF(sto.product_id>0,1,0) is_charge,
+			gift.gift_type charge_type,
+			gift.price
+        FROM live_studio_list sto
+        LEFT JOIN sys_country country ON sto.country_code = country.country_code
+        LEFT JOIN lottery_lang lottery ON lottery.lottery_id = sto.game_id AND lottery.lang = #{lang}
+		LEFT JOIN live_gift gift ON gift.gift_id=sto.product_id
+		LEFT JOIN mem_user_anchor anchor ON anchor.user_id=sto.user_id
+        WHERE sto.studio_status = 1
+    </select>
+
+    <select id="lastSortNum" resultType="com.onelive.common.model.vo.live.LiveStudioListVo">
+        SELECT
+	    	IFNULL(MAX(sort_num), 0) sortNum
+        FROM 
+        	live_studio_list 
+        	WHERE studio_status = 1 
+        	AND merchant_code = #{merchantCode}
+        	AND is_first = 2
+    </select>
+    
+    <select id="getLiveByStudioNums" resultType="com.onelive.common.model.vo.live.LiveStudioListForIndexVO">
+        SELECT
+	        sto.studio_id,
+	        sto.studio_num,
+	        sto.user_id,
+			anchor.id anchor_id,
+	        sto.game_id,
+	        sto.country_code,
+	        sto.studio_status,
+	        sto.column_code,
+	        sto.studio_background,
+	        sto.studio_thumb_image,
+	        sto.studio_title,
+	        lottery.lottery_name game_name,
+	      	sto.sharpness,
+	      	sto.colour,
+	      	sto.is_first,
+	      	sto.is_fixed,
+	      	sto.city_name,
+	        muser.nick_name,
+	        country.country_name,
+            IF(sto.game_id>0,1,0) is_light_year_recommend,
+            IF(sto.product_id>0,1,0) is_charge,
+			gift.gift_type charge_type,
+			gift.price
+        FROM live_studio_list sto
+        LEFT JOIN lottery_lang lottery ON lottery.lottery_id = sto.game_id AND lottery.lang = #{lang}
+        LEFT JOIN mem_user muser ON sto.user_id = muser.id
+        LEFT JOIN sys_country country ON sto.country_code = country.country_code
+		LEFT JOIN live_gift gift ON gift.gift_id=sto.product_id
+		LEFT JOIN mem_user_anchor anchor ON anchor.user_id=sto.user_id
+		WHERE sto.studio_status = 1
+        AND sto.studio_num IN
+       	<foreach collection="liveStudioNums" item="item" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+    </select>
+    
+    <select id="focusStudioNums" resultType="com.onelive.common.mybatis.entity.LiveStudioList">
+        SELECT 
+        	studio.studio_num,
+        	studio.country_code
+        	FROM
+			  mem_focus_user focus 
+		LEFT JOIN live_studio_list studio ON studio.user_id = focus.focus_id
+		WHERE focus.user_id = #{userId} AND studio.studio_status = 1
+    </select>
+    
+    <select id="getAllOnline" resultType="com.onelive.common.mybatis.entity.LiveStudioList">
+        SELECT 
+        	studio.studio_num,
+        	studio.country_code,
+        	studio.game_id,
+        	studio.start_time,
+        	studio.is_fixed,
+        	studio.is_first,
+        	studio.sort_num
+       	FROM
+			  live_studio_list studio
+		WHERE studio.studio_status = 1
+    </select>
+
+
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.index.LiveColumnMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.LiveColumn">
+        <id column="column_id" property="columnId" />
+        <result column="column_name" property="columnName" />
+        <result column="column_value" property="columnValue" />
+        <result column="created_by" property="createdBy" />
+        <result column="updated_by" property="updatedBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="sort_no" property="sortNo" />
+        <result column="is_open" property="isOpen" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        column_id, column_name, column_value, created_by, updated_by, create_time, update_time, sort_no, is_open
+    </sql>
+
+</mapper>

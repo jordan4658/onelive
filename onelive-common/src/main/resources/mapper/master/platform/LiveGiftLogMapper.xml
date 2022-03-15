@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.platform.LiveGiftLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.LiveGiftLog">
+        <id column="gift_log_id" property="giftLogId" />
+        <result column="host_id" property="hostId" />
+        <result column="giving_id" property="givingId" />
+        <result column="gift_id" property="giftId" />
+        <result column="gift_number" property="giftNumber" />
+        <result column="gift_price" property="giftPrice" />
+        <result column="giving_time" property="givingTime" />
+        <result column="giving_role_value" property="givingRoleValue" />
+        <result column="is_sys" property="isSys" />
+        <result column="gift_combo_id" property="giftComboId" />
+        <result column="merchant_code" property="merchantCode" />
+        <result column="studio_log_id" property="studioLogId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        gift_log_id, host_id,studio_log_id, giving_id, gift_id, gift_number, gift_price, giving_time, giving_role_value, is_sys, gift_combo_id, merchant_code
+    </sql>
+
+   <select id="getGiftDetailList" parameterType="com.onelive.common.model.req.platform.GiftGivingReq"
+            resultType="com.onelive.common.model.vo.live.GiftLogListVO">
+    	SELECT 
+    			u.user_account as userAccount,
+    			log.giving_time as givingTime,
+                lg.gift_name as giftName,
+    			u.nick_name as givingName,
+    			log.gift_price*log.gift_number as  amount
+	    	FROM live_gift_log log 
+	    	LEFT JOIN live_gift gift  ON log.gift_id = gift.gift_id 
+	    	LEFT JOIN mem_user u on log.host_id = u.id
+            LEFT JOIN live_gift_lang lg ON lg.gift_id = gift.gift_id
+       <if test="countryId != null">
+            AND u.country_id =#{countryId}
+        </if>
+        <if test="giftName != null and giftName != ''">
+            AND gift.gift_name LIKE "%"#{giftName}"%"
+        </if>
+        <if test="startDate != null and startDate != ''">
+            AND log.giving_time >= #{startDate}
+        </if>
+        <if test="endDate != null and endDate != ''">
+            AND log.giving_time &lt;= #{endDate}
+        </if>
+        <if test="userAccount != null and userAccount != ''">
+            AND u.user_account LIKE "%"#{userAccount}"%"
+        </if>
+    </select>
+</mapper>

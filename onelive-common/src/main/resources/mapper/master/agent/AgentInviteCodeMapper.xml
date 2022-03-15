@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.agent.AgentInviteCodeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.AgentInviteCode">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="user_account" property="userAccount" />
+        <result column="invite_code" property="inviteCode" />
+        <result column="agent_level" property="agentLevel" />
+        <result column="invite_user_id" property="inviteUserId" />
+        <result column="invite_user_account" property="inviteUserAccount" />
+        <result column="root_user_id" property="rootUserId" />
+        <result column="merchant_code" property="merchantCode" />
+        <result column="status" property="status" />
+        <result column="is_delete" property="isDelete" />
+        <result column="is_sys" property="isSys" />
+        <result column="is_auto_create" property="isAutoCreate" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, user_account, invite_code, agent_level, invite_user_id, invite_user_account, root_user_id, merchant_code, status, is_delete, is_sys, is_auto_create, create_time
+    </sql>
+
+</mapper>

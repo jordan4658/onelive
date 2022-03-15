@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.mem.SlaveMemUserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.MemUser">
+        <id column="id" property="id" />
+        <result column="password" property="password" />
+        <result column="pay_password" property="payPassword" />
+        <result column="salt" property="salt" />
+        <result column="country_id" property="countryId" />
+        <result column="nick_name" property="nickName" />
+        <result column="remark" property="remark" />
+        <result column="sex" property="sex" />
+        <result column="user_account" property="userAccount" />
+        <result column="focus_num" property="focusNum" />
+        <result column="fans_num" property="fansNum" />
+        <result column="is_frozen" property="isFrozen" />
+        <result column="user_level" property="userLevel" />
+        <result column="avatar" property="avatar" />
+        <result column="mobile_phone" property="mobilePhone" />
+        <result column="register_area_code" property="registerAreaCode" />
+        <result column="accno" property="accno" />
+        <result column="group_id" property="groupId" />
+        <result column="birthday" property="birthday" />
+        <result column="register_ip" property="registerIp" />
+        <result column="register_time" property="registerTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="register_area" property="registerArea" />
+        <result column="register_source" property="registerSource" />
+        <result column="register_device" property="registerDevice" />
+        <result column="register_country_code" property="registerCountryCode" />
+        <result column="register_area_select_status" property="registerAreaSelectStatus" />
+        <result column="default_country_code" property="defaultCountryCode" />
+        <result column="open_country_code" property="openCountryCode" />
+        <result column="last_login_ip" property="lastLoginIp" />
+        <result column="last_login_time" property="lastLoginTime" />
+        <result column="last_login_source" property="lastLoginSource" />
+        <result column="last_login_area" property="lastLoginArea" />
+        <result column="last_login_device" property="lastLoginDevice" />
+        <result column="is_commission" property="isCommission" />
+        <result column="is_bet" property="isBet" />
+        <result column="is_dispensing" property="isDispensing" />
+        <result column="is_super_live_manage" property="isSuperLiveManage" />
+        <result column="is_online" property="isOnline" />
+        <result column="user_type" property="userType" />
+        <result column="user_device_id" property="userDeviceId" />
+        <result column="personal_signature" property="personalSignature" />
+        <result column="hometown" property="hometown" />
+        <result column="marital_status" property="maritalStatus" />
+        <result column="occupation_code" property="occupationCode" />
+        <result column="nick_name_status" property="nickNameStatus" />
+        <result column="mobile_authenticated" property="mobileAuthenticated" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="merchant_code" property="merchantCode" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, password,pay_password, salt, country_id, nick_name, remark, sex, user_account, focus_num, fans_num, is_frozen, user_level, avatar, mobile_phone, register_area_code, accno, group_id, birthday, register_ip, register_time, created_by, register_area, register_source, register_device, register_country_code, register_area_select_status, default_country_code, open_country_code, last_login_ip, last_login_time, last_login_source, last_login_area, last_login_device, is_commission, is_bet, is_dispensing, is_super_live_manage, is_online, user_type, user_device_id, personal_signature, hometown, marital_status, occupation_code, nick_name_status, mobile_authenticated, update_by, update_time, merchant_code
+    </sql>
+
+    <select id="getList" parameterType="com.onelive.common.model.req.mem.MemUserListReq"
+            resultType="com.onelive.common.model.vo.mem.MemUserListVO">
+        SELECT
+        muser.id,
+        muser.accno,
+        muser.user_account,
+        muser.nick_name,
+        muser.register_area,
+        IFNULL(wallet.amount,0) balance,
+        IFNULL(wallet.silver_bean,0) silver_bean,
+        ( SELECT COUNT(*) FROM agent_invite_record record WHERE record.invite_user_id = muser.id ) sub_num,
+        ac.invite_user_account parent_user_account,
+        muser.user_level,
+        muser.group_id,
+        ( SELECT COUNT(*) FROM mem_login_record record WHERE record.account = muser.accno ) login_num,
+        muser.register_time,
+        muser.last_login_time,
+        muser.last_login_ip,
+        muser.is_frozen
+        FROM
+        mem_user muser
+        LEFT JOIN mem_wallet wallet ON muser.id = wallet.user_id
+        LEFT JOIN agent_invite_code ac ON muser.id = ac.user_id
+        <where>
+            wallet.wallet_type = 1
+            <if test="accno != null and accno != ''">
+                and muser.accno = #{accno}
+            </if>
+
+            <if test="countryCode != null and countryCode != ''">
+                and muser.register_country_code = #{countryCode}
+            </if>
+
+            <if test="nickName != null and nickName != ''">
+                and muser.nick_name = #{nickName}
+            </if>
+
+            <if test="userAccount != null and userAccount != ''">
+                and muser.user_account = #{userAccount}
+            </if>
+
+            <if test="userLevel != null and userLevel != ''">
+                and muser.user_level = #{userLevel}
+            </if>
+
+            <if test="isFrozen != null and isFrozen != ''">
+                and muser.is_frozen = #{isFrozen}
+            </if>
+
+            <if test="lastLoginIp != null and lastLoginIp != ''">
+                and muser.last_login_ip = #{lastLoginIp}
+            </if>
+
+            <if test="parentUserAccount != null and parentUserAccount != ''">
+                and ac.invite_user_account = #{parentUserAccount}
+            </if>
+
+            <if test="accountPrefix != null and accountPrefix != ''">
+                and muser.user_account LIKE CONCAT(#{accountPrefix},'%')
+            </if>
+
+            <if test="merchantCode != null and merchantCode != ''">
+                and muser.merchant_code = #{merchantCode}
+            </if>
+
+            <if test="startTime != null and startTime != ''">
+                and muser.last_login_time >= #{startTime}
+            </if>
+
+            <if test="endTime != null and startTime != ''">
+                and muser.last_login_time &lt; #{endTime}
+            </if>
+
+        </where>
+    </select>
+
+
+    <update id="updateFrozenUsers">
+        UPDATE mem_user SET is_frozen = #{isFrozen}
+        WHERE
+        <foreach item="uid" collection="userIds" index="index" open="id in (" separator="," close=")">
+            #{uid}
+        </foreach>
+    </update>
+
+    <update id="updateCommissionUsers">
+        UPDATE mem_user SET is_commission = #{isCommission}
+        WHERE
+        <foreach item="uid" collection="ids" index="index" open="id in (" separator="," close=")">
+            #{uid}
+        </foreach>
+    </update>
+
+    <select id="conditionSearch" parameterType="com.onelive.common.model.req.live.LiveIndexSearchReq"
+            resultType="com.onelive.common.model.vo.mem.MemUserAnchorSearchListVO">
+        SELECT
+            muser.id,
+            muser.accno,
+            muser.user_account,
+            muser.nick_name,
+            muser.register_area,
+            muser.register_time,
+            muser.last_login_time,
+            muser.last_login_ip,
+            muser.is_frozen,
+            muser.sex,
+            muser.avatar,
+            studio.studio_num,
+            studio.country_code,
+            IF(muser.user_type = 2, true, false) isAuthor
+        FROM
+            mem_user muser
+                LEFT JOIN live_studio_list studio ON muser.id = studio.user_id
+        WHERE
+            muser.user_type = 2 AND muser.merchant_code = #{merchantCode} AND studio.merchant_code = #{merchantCode}
+          AND
+            (muser.id = #{context}
+                OR muser.nick_name LIKE "%"#{context}"%"
+			OR muser.user_account LIKE "%"#{context}"%"
+                OR studio.studio_num = #{context}
+                OR studio.studio_title LIKE "%"#{context}"%")
+
+    </select>
+
+    <select id="getAnchorInfoById" resultType="com.onelive.common.model.vo.live.LiveAnchorInfoVO">
+        SELECT u.id user_id,
+               u.accno,
+               u.nick_name,
+               u.avatar,
+               u.sex,
+               u.focus_num,
+               u.fans_num,
+               u.personal_signature,
+               u.user_type,
+               vip.level_icon,
+               vip.level_name,
+               vip.level_weight                         `level`,
+               IF(IFNULL(fu.id, 0) = 0, FALSE, TRUE) AS is_focus
+        FROM mem_user u
+                 LEFT JOIN mem_level_vip vip ON u.user_level = vip.level_weight
+                 LEFT JOIN mem_focus_user fu ON fu.user_id = #{userId}
+            AND fu.focus_id = #{anchorUserId}
+        WHERE u.id = #{userId}
+    </select>
+
+    <select id="getByUserGroupId" resultType="com.onelive.common.model.dto.mem.UserGroupCountDTO">
+        select a.group_id userGroupId,count(id) countTotal from mem_user a
+        where 1=1
+        <if test="currencyId !=null">
+            and   a.country_id=#{currencyId}
+        </if>
+        and a.group_id in (
+        <foreach collection="list" item="item" index="index"
+                 separator=",">
+            #{item}
+        </foreach>
+        )
+        GROUP BY a.group_id
+    </select>
+
+    <select id="queryUserReport" resultType="com.onelive.common.model.vo.report.UserReportVO">
+        select a.id,
+        a.user_account account,
+        a.user_level  memLevel,
+        ifnull(b.amount,0) as amount,
+        ifnull(b.silver_bean,0) as silverAmount,
+        ifnull(b.sum_recharge_amount,0) as sumRechargeAmount,
+        ifnull(b.sum_withdraw_amount,0) as sumWithdrawAmount,
+        ifnull(b.account_dml,0) as accountDml,
+        ifnull(b.sum_account_dml,0) as sumAccountDml,
+        ifnull(b.withdrawal_num,0) as withdrawalNum,
+        ifnull(b.pay_num,0) as payNum,
+        ifnull(b.withdrawal_max,0) as withdrawalMax,
+        ifnull(b.pay_max,0) as payMax,
+        a.is_frozen as freezeStatus
+        from mem_user a
+        left join mem_wallet b on a.user_account = b.account and b.wallet_type = 1
+        <where>
+            <if test="account !=null and account != '' ">
+                and a.user_account LIKE CONCAT('%', #{account}, '%')
+            </if>
+        </where>
+        order by a.register_time desc
+    </select>
+
+</mapper>

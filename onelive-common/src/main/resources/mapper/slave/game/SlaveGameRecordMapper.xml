@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.game.SlaveGameRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.GameRecord">
+        <id column="id" property="id" />
+        <result column="player_name" property="playerName" />
+        <result column="game_type_id" property="gameTypeId" />
+        <result column="game_type_name" property="gameTypeName" />
+        <result column="round_id" property="roundId" />
+        <result column="round_no" property="roundNo" />
+        <result column="table_code" property="tableCode" />
+        <result column="platform_name" property="platformName" />
+        <result column="platform_id" property="platformId" />
+        <result column="series_id" property="seriesId" />
+        <result column="series_name" property="seriesName" />
+        <result column="bet_amount" property="betAmount" />
+        <result column="valid_bet_amount" property="validBetAmount" />
+        <result column="net_amount" property="netAmount" />
+        <result column="pumping_amount" property="pumpingAmount" />
+        <result column="pay_amount" property="payAmount" />
+        <result column="before_amount" property="beforeAmount" />
+        <result column="currency" property="currency" />
+        <result column="create_at" property="createAt" />
+        <result column="net_at" property="netAt" />
+        <result column="recalcu_at" property="recalcuAt" />
+        <result column="updated_at" property="updatedAt" />
+        <result column="match_start_time" property="matchStartTime" />
+        <result column="cancel_at" property="cancelAt" />
+        <result column="risk_unlock_at" property="riskUnlockAt" />
+        <result column="nick_name" property="nickName" />
+        <result column="player_id" property="playerId" />
+        <result column="device_type" property="deviceType" />
+        <result column="login_ip" property="loginIp" />
+        <result column="agent_code" property="agentCode" />
+        <result column="agent_id" property="agentId" />
+        <result column="agent_name" property="agentName" />
+        <result column="parent_agent_id" property="parentAgentId" />
+        <result column="parent_agent_code" property="parentAgentCode" />
+        <result column="bet_status" property="betStatus" />
+        <result column="order_type" property="orderType" />
+        <result column="cancel_status" property="cancelStatus" />
+        <result column="cancel_type" property="cancelType" />
+        <result column="signature" property="signature" />
+        <result column="table_name" property="tableName" />
+        <result column="is_tester" property="isTester" />
+        <result column="play_options_id" property="playOptionsId" />
+        <result column="play_option_name" property="playOptionName" />
+        <result column="odds_value" property="oddsValue" />
+        <result column="play_id" property="playId" />
+        <result column="play_name" property="playName" />
+        <result column="play_level_id" property="playLevelId" />
+        <result column="play_level" property="playLevel" />
+        <result column="settle_score" property="settleScore" />
+        <result column="data_source" property="dataSource" />
+        <result column="bet_flag" property="betFlag" />
+        <result column="judge_result" property="judgeResult" />
+        <result column="boot_no" property="bootNo" />
+        <result column="device_id" property="deviceId" />
+        <result column="record_type" property="recordType" />
+        <result column="game_mode" property="gameMode" />
+        <result column="dealer_name" property="dealerName" />
+        <result column="judge_result_cn" property="judgeResultCn" />
+        <result column="judge_result1" property="judgeResult1" />
+        <result column="room_type" property="roomType" />
+        <result column="game_room" property="gameRoom" />
+        <result column="game_flag" property="gameFlag" />
+        <result column="bet_count" property="betCount" />
+        <result column="bet_result" property="betResult" />
+        <result column="series_type" property="seriesType" />
+        <result column="series_value" property="seriesValue" />
+        <result column="bet_no" property="betNo" />
+        <result column="match_id" property="matchId" />
+        <result column="handi_cap" property="handiCap" />
+        <result column="match_name" property="matchName" />
+        <result column="match_info" property="matchInfo" />
+        <result column="match_type" property="matchType" />
+        <result column="sport_id" property="sportId" />
+        <result column="sport_name" property="sportName" />
+        <result column="tournament_id" property="tournamentId" />
+        <result column="market_value" property="marketValue" />
+        <result column="market_type" property="marketType" />
+        <result column="begin_time" property="beginTime" />
+        <result column="score_benchmark" property="scoreBenchmark" />
+        <result column="parent_record_id" property="parentRecordId" />
+        <result column="account_change_status" property="accountChangeStatus" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, player_name, game_type_id, game_type_name, round_id, round_no, table_code, platform_name, platform_id, series_id, series_name, bet_amount, valid_bet_amount, net_amount, pumping_amount, pay_amount, before_amount, currency, create_at, net_at, recalcu_at, updated_at, match_start_time, cancel_at, risk_unlock_at, nick_name, player_id, device_type, login_ip, agent_code, agent_id, agent_name, parent_agent_id, parent_agent_code, bet_status, order_type, cancel_status, cancel_type, signature, table_name, is_tester, play_options_id, play_option_name, odds_value, play_id, play_name, play_level_id, play_level, settle_score, data_source, bet_flag, judge_result, boot_no, device_id, record_type, game_mode, dealer_name, judge_result_cn, judge_result1, room_type, game_room, game_flag, bet_count, bet_result, series_type, series_value, bet_no, match_id, handi_cap, match_name, match_info, match_type, sport_id, sport_name, tournament_id, market_value, market_type, begin_time, score_benchmark, parent_record_id, account_change_status
+    </sql>
+
+</mapper>

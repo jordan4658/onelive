@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.sys.SlaveSysAdvActivityMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.SysAdvActivity">
+        <id column="id" property="id" />
+        <result column="activity_name" property="activityName" />
+        <result column="activity_type" property="activityType" />
+        <result column="start_date" property="startDate" />
+        <result column="end_date" property="endDate" />
+        <result column="country_code_list" property="countryCodeList" />
+        <result column="country_name_list" property="countryNameList" />
+        <result column="skip_model" property="skipModel" />
+        <result column="skip_url" property="skipUrl" />
+        <result column="config_id" property="configId" />
+        <result column="lottery_category_id" property="lotteryCategoryId" />
+        <result column="lottery_id" property="lotteryId" />
+        <result column="img_url" property="imgUrl" />
+        <result column="sort" property="sort" />
+        <result column="is_frozen" property="isFrozen" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_time" property="createTime" />
+        <result column="create_user" property="createUser" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="merchant_code" property="merchantCode" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, activity_name, activity_type, start_date, end_date, country_code_list, country_name_list, skip_model, skip_url, config_id, lottery_category_id, lottery_id, img_url, sort, is_frozen, is_delete, create_time, create_user, update_user, update_time, merchant_code
+    </sql>
+
+</mapper>

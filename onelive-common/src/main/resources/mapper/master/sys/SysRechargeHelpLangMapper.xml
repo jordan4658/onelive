@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.sys.SysRechargeHelpLangMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.SysRechargeHelpLang">
+        <id column="id" property="id" />
+        <result column="help_id" property="helpId" />
+        <result column="lang" property="lang" />
+        <result column="title" property="title" />
+        <result column="content" property="content" />
+        <result column="create_time" property="createTime" />
+        <result column="create_user" property="createUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="is_delete" property="isDelete" />
+        <result column="merchant_code" property="merchantCode" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, help_id, lang, title, content, create_time, create_user, update_time, update_user, is_delete, merchant_code
+    </sql>
+
+</mapper>

@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: onelive-api
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 3.0.176.108:9949
+      config:
+        #server-addr: 159.138.152.65:4042
+        server-addr: 3.0.176.108:9949
+        prefix: common
+        file-extension: yml
+        #group: dev
+        #namespace: 16142b90-f1c3-427d-93d7-f4ca596f7c2c
+        enabled: true
+        refresh-enabled: false
+server:
+  port: 9013
+
+auth:
+  skip: dev,sit
+
+businessSwitch:
+  #发送短信是否在header里面返回短信验证码（测试启用）
+  smsSwitch: true

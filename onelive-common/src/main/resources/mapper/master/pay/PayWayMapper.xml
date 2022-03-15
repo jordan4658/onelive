@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.pay.PayWayMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.PayWay">
+        <id column="pay_way_id" property="payWayId"/>
+        <result column="provider_id" property="providerId"/>
+        <result column="country_code" property="countryCode"/>
+        <result column="pay_type_code" property="payTypeCode"/>
+        <result column="pay_way_name" property="payWayName"/>
+        <result column="pay_way_tag" property="payWayTag"/>
+        <result column="giving_type" property="givingType"/>
+        <result column="pay_way_giving_ratio" property="payWayGivingRatio"/>
+        <result column="min_amt" property="minAmt"/>
+        <result column="max_amt" property="maxAmt"/>
+        <result column="shortcut" property="shortcut"/>
+        <result column="is_input" property="isInput"/>
+        <result column="status" property="status"/>
+        <result column="sort_by" property="sortBy"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <resultMap id="PayWayListResultMap" type="com.onelive.common.model.vo.pay.PayWayVO">
+        <id column="pay_way_id" property="payWayId"/>
+        <result column="provider_id" property="providerId"/>
+        <result column="pay_type_code" property="payTypeCode"/>
+        <result column="pay_way_name" property="payWayName"/>
+        <result column="giving_type" property="givingType"/>
+        <result column="pay_way_giving_ratio" property="payWayGivingRatio"/>
+        <result column="min_amt" property="minAmt"/>
+        <result column="max_amt" property="maxAmt"/>
+        <result column="shortcut" property="shortcut"/>
+        <result column="is_input" property="isInput"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        pay_way_id
+        , provider_id,country_code, pay_type_code, pay_way_name, pay_way_tag, giving_type, pay_way_giving_ratio, min_amt, max_amt, shortcut, is_input, status, sort_by, create_user, update_user, create_time, update_time
+    </sql>
+
+
+</mapper>

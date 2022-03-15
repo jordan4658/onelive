@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.sys.SlaveSysAdvNoticeMapper">
+
+
+    <select id="selectOneByType" resultType="com.onelive.common.model.dto.sys.SysAdvNoticeDto">
+	    SELECT
+	    	notice.notice_name,
+	    	notlang.notice_content
+		FROM
+		sys_adv_notice notice
+			LEFT JOIN sys_adv_notice_lang notlang ON notlang.notice_id = notice.id 
+		WHERE notlang.notice_content IS NOT NULL AND notlang.notice_content != ''
+			AND notice.type = #{type}
+			AND notice.is_hide = 0
+			AND notice.merchant_code = #{merchantCode}
+			AND notlang.lang = #{lang}
+			AND #{now} >= notice.start_date AND #{now} &lt;= notice.end_date 
+			LIMIT 1
+    </select>
+
+</mapper>

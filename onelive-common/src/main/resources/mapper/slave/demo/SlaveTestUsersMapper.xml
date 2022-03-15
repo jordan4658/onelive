@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.demo.SlaveTestUsersMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.TestUser">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="age" property="age"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id
+        , name, age
+    </sql>
+    <select id="getSlave" resultMap="BaseResultMap">
+        select *
+        from test_user
+    </select>
+    <insert id="insert_master" parameterType="com.onelive.common.mybatis.entity.TestUser">
+        insert into test_user (name, age)
+        values (#{name}, #{age})
+    </insert>
+    <insert id="insert_master2" parameterType="com.onelive.common.mybatis.entity.TestUser">
+        insert into test_user (name, age)
+        values (#{name}, #{age})
+    </insert>
+
+</mapper>

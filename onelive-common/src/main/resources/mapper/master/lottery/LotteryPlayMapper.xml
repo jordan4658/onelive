@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.lottery.LotteryPlayMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.LotteryPlay">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="category_id" property="categoryId" />
+        <result column="parent_id" property="parentId" />
+        <result column="sort" property="sort" />
+        <result column="level" property="level" />
+        <result column="section" property="section" />
+        <result column="tree" property="tree" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="is_delete" property="isDelete" />
+        <result column="lottery_id" property="lotteryId" />
+        <result column="play_tag_id" property="playTagId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, category_id, parent_id, sort, level, section, tree, create_time, update_time, is_delete, lottery_id, play_tag_id
+    </sql>
+
+</mapper>

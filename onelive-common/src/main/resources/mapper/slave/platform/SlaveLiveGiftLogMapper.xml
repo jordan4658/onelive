@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.platform.SlaveLiveGiftLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.LiveGiftLog">
+        <id column="gift_log_id" property="giftLogId"/>
+        <result column="host_id" property="hostId"/>
+        <result column="giving_id" property="givingId"/>
+        <result column="gift_id" property="giftId"/>
+        <result column="gift_number" property="giftNumber"/>
+        <result column="gift_price" property="giftPrice"/>
+        <result column="giving_time" property="givingTime"/>
+        <result column="giving_local_time" property="givingLocalTime"/>
+        <result column="giving_role_value" property="givingRoleValue"/>
+        <result column="is_sys" property="isSys"/>
+        <result column="gift_combo_id" property="giftComboId"/>
+        <result column="merchant_code" property="merchantCode"/>
+        <result column="studio_log_id" property="studioLogId"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        gift_log_id
+        , host_id, giving_id, gift_id, gift_number, gift_price, giving_time, giving_role_value, is_sys, gift_combo_id, merchant_code, studio_log_id
+    </sql>
+
+    <select id="queryTopgGiveGift" resultType="com.onelive.common.model.vo.live.LiveUserDetailVO">
+        SELECT (gft.gift_price * gift_number) giftTotal,
+               mu.nick_name,
+               mu,
+               sex,
+               mu.level,
+               mu.avatar
+        FROM live_gift_log gft
+                 LEFT JOIN mem_user mu ON mu.id = gft.giving_id
+        WHERE gft.host_id = #{hostId}
+        GROUP BY gft.giving_id
+        ORDER BY giftTotal DESC LIMIT 50
+    </select>
+
+    <select id="selectUserSumByhostId" resultType="java.math.BigDecimal">
+        SELECT IFNULL(SUM(gift_number * gift_price), 0) FROM live_gift_log
+        <where>
+            <if test="givingId != null">
+                AND giving_id = #{givingId}
+            </if>
+            <if test="hostId != null">
+                AND host_id = #{hostId}
+            </if>
+        </where>
+    </select>
+
+    <select id="roomTodayRanking" parameterType="java.lang.Long"
+            resultType="com.onelive.common.model.vo.ranking.RankingVo">
+        SELECT b.firepower,
+               c.nick_name,
+               c.id userId,
+               c.sex,
+               c.user_level,
+               c.avatar,
+               c.user_type
+        FROM (
+                 SELECT a.giving_id,
+                        SUM(a.gift_number * a.gift_price * 10) firepower
+                 FROM live_gift_log a
+                 WHERE a.host_id = #{userId}
+                   AND TO_DAYS(a.giving_local_time) = TO_DAYS(#{givingLocalTime})
+                 GROUP BY a.giving_id
+             ) b
+                 LEFT JOIN mem_user c ON b.giving_id = c.id
+        ORDER BY b.firepower DESC LIMIT 30
+    </select>
+
+
+    <select id="roomWeekRanking" parameterType="java.lang.Long"
+            resultType="com.onelive.common.model.vo.ranking.RankingVo">
+        SELECT b.firepower,
+               c.nick_name,
+               c.id userId,
+               c.sex,
+               c.user_level,
+               c.avatar,
+               c.user_type
+        FROM (
+                 SELECT a.giving_id,
+                        SUM(a.gift_number * a.gift_price * 10) firepower
+                 FROM live_gift_log a
+                 WHERE a.host_id = #{userId}
+                   AND YEARWEEK(date_format(a.giving_local_time, '%Y-%m-%d')) = YEARWEEK(#{givingLocalTime})
+                 GROUP BY a.giving_id
+             ) b
+                 LEFT JOIN mem_user c ON b.giving_id = c.id
+        ORDER BY b.firepower DESC LIMIT 30
+    </select>
+
+
+    <select id="roomMonthRanking" parameterType="java.lang.Long"
+            resultType="com.onelive.common.model.vo.ranking.RankingVo">
+        SELECT b.firepower,
+               c.nick_name,
+               c.id userId,
+               c.sex,
+               c.user_level,
+               c.avatar,
+               c.user_type
+        FROM (
+                 SELECT a.giving_id,
+                        SUM(a.gift_number * a.gift_price * 10) firepower
+                 FROM live_gift_log a
+                 WHERE a.host_id = #{userId}
+                   AND DATE_FORMAT(a.giving_local_time, '%Y-%m') = DATE_FORMAT(#{givingLocalTime}, '%Y-%m')
+                 GROUP BY a.giving_id
+             ) b
+                 LEFT JOIN mem_user c ON b.giving_id = c.id
+        ORDER BY b.firepower DESC LIMIT 30
+    </select>
+
+    <select id="roomTotalRanking" parameterType="java.lang.Long"
+            resultType="com.onelive.common.model.vo.ranking.RankingVo">
+        SELECT b.firepower,
+               c.nick_name,
+               c.id userId,
+               c.sex,
+               c.user_level,
+               c.avatar,
+               c.user_type
+        FROM (
+                 SELECT a.giving_id,
+                        SUM(a.gift_number * a.gift_price * 10) firepower
+                 FROM live_gift_log a
+                 WHERE a.host_id = #{userId}
+                 GROUP BY a.giving_id
+             ) b
+                 LEFT JOIN mem_user c ON b.giving_id = c.id
+        ORDER BY b.firepower DESC LIMIT 30
+    </select>
+
+    <select id="anchorTodayRanking" parameterType="java.lang.Boolean"
+            resultType="com.onelive.common.model.vo.ranking.RankingVo">
+        SELECT
+        b.firepower,
+        c.nick_name,
+        c.id userId,
+        c.sex,
+        c.user_level,
+       	<if test="isShowfans">
+ 			COUNT(focus.id) fansCount,
+       	</if>
+        c.avatar,
+        c.user_type
+        FROM
+        (SELECT
+        a.host_id,
+        SUM( a.gift_number * a.gift_price *10 ) firepower
+        FROM
+        live_gift_log a
+        WHERE
+        <choose>
+            <when test="isPrevious">
+                TO_DAYS(#{givingLocalTime}) - TO_DAYS(a.giving_time) = 1 
+            </when>
+            <otherwise>
+                TO_DAYS(a.giving_local_time) = TO_DAYS(#{givingLocalTime})
+            </otherwise>
+        </choose>
+
+        GROUP BY a.host_id
+        ) b
+        LEFT JOIN mem_user c ON b.host_id = c.id
+        <if test="isShowfans">
+	        LEFT JOIN mem_focus_user focus ON focus.focus_id = b.host_id AND focus.is_focus = 1
+        </if>
+        ORDER BY b.firepower DESC
+        LIMIT 30
+    </select>
+
+    <select id="anchorWeekRanking" parameterType="java.lang.Boolean"
+            resultType="com.onelive.common.model.vo.ranking.RankingVo">
+        SELECT
+        b.firepower,
+        c.nick_name,
+        c.id userId,
+        c.sex,
+        c.user_level,
+       	<if test="isShowfans">
+ 			COUNT(focus.id) fansCount,
+       	</if>
+        c.avatar
+        FROM
+        (SELECT
+        a.host_id,
+        SUM( a.gift_number * a.gift_price *10 ) firepower,
+        c.user_type
+        FROM
+        live_gift_log a
+        WHERE
+        <choose>
+            <when test="isPrevious">
+                YEARWEEK(date_format(a.giving_local_time, '%Y-%m-%d')) = YEARWEEK(#{givingLocalTime}) - 1
+            </when>
+            <otherwise>
+                YEARWEEK(date_format(a.giving_local_time, '%Y-%m-%d')) = YEARWEEK(#{givingLocalTime})
+            </otherwise>
+        </choose>
+        GROUP BY a.host_id
+        ) b
+        LEFT JOIN mem_user c ON b.host_id = c.id
+        <if test="isShowfans">
+	        LEFT JOIN mem_focus_user focus ON focus.focus_id = b.host_id AND focus.is_focus = 1
+        </if>
+        GROUP BY b.host_id  ORDER BY b.firepower DESC
+        LIMIT 30
+    </select>
+
+    <select id="anchorMonthRanking" parameterType="java.lang.Boolean"
+            resultType="com.onelive.common.model.vo.ranking.RankingVo">
+        SELECT
+	        b.firepower,
+	        c.nick_name,
+	        c.id userId,
+	        c.sex,
+	        c.user_level,
+	        <if test="isShowfans">
+ 				COUNT(focus.id) fansCount,
+       		</if>
+	        c.avatar,
+        	c.user_type
+        FROM
+        (SELECT
+        a.host_id,
+        SUM( a.gift_number * a.gift_price *10 ) firepower
+        FROM
+        live_gift_log a
+        WHERE
+        <choose>
+            <when test="isPrevious">
+                DATE_FORMAT(a.giving_local_time,'%Y-%m') = DATE_FORMAT(DATE_SUB(#{givingLocalTime}, INTERVAL 1
+                MONTH),'%Y-%m')
+            </when>
+            <otherwise>
+                DATE_FORMAT(a.giving_local_time,'%Y-%m') = DATE_FORMAT(#{givingLocalTime},'%Y-%m')
+            </otherwise>
+        </choose>
+        GROUP BY a.host_id
+        ) b
+        LEFT JOIN mem_user c ON b.host_id = c.id
+        <if test="isShowfans">
+	        LEFT JOIN mem_focus_user focus ON focus.focus_id = b.host_id AND focus.is_focus = 1
+        </if>
+        ORDER BY b.firepower DESC
+        LIMIT 30
+    </select>
+
+
+    <select id="userTodayRanking" parameterType="java.lang.Boolean"
+            resultType="com.onelive.common.model.vo.ranking.RankingVo">
+        SELECT
+        b.firepower,
+        c.nick_name,
+        c.id userId,
+        c.sex,
+        c.user_level,
+        c.avatar,
+      	c.user_type
+        FROM
+        (
+        SELECT
+        a.giving_id,
+        SUM( a.gift_number * a.gift_price *10 ) firepower
+        FROM
+        live_gift_log a
+        WHERE
+        <choose>
+            <when test="isPrevious == true">
+                TO_DAYS(#{givingLocalTime}) - TO_DAYS(a.giving_local_time) = 1
+            </when>
+            <otherwise>
+                TO_DAYS(a.giving_local_time) = TO_DAYS(#{givingLocalTime})
+            </otherwise>
+        </choose>
+        GROUP BY a.giving_id
+        ) b
+        LEFT JOIN mem_user c ON b.giving_id = c.id
+        ORDER BY b.firepower DESC
+        LIMIT 30
+    </select>
+
+
+    <select id="userWeekRanking" parameterType="java.lang.Boolean"
+            resultType="com.onelive.common.model.vo.ranking.RankingVo">
+        SELECT
+        b.firepower,
+        c.nick_name,
+        c.id userId,
+        c.sex,
+        c.user_level,
+        c.avatar,
+        c.user_type
+        FROM
+        (
+        SELECT
+        a.giving_id,
+        SUM( a.gift_number * a.gift_price *10 ) firepower
+        FROM
+        live_gift_log a
+        WHERE
+        <choose>
+            <when test="isPrevious">
+                YEARWEEK(DATE_FORMAT(a.giving_local_time, '%Y-%m-%d')) = YEARWEEK(#{givingLocalTime}) - 1
+            </when>
+            <otherwise>
+                YEARWEEK(DATE_FORMAT(a.giving_local_time, '%Y-%m-%d')) = YEARWEEK(#{givingLocalTime})
+            </otherwise>
+        </choose>
+        GROUP BY a.giving_id
+        ) b
+        LEFT JOIN mem_user c ON b.giving_id = c.id
+        ORDER BY b.firepower DESC
+        LIMIT 30
+    </select>
+
+
+    <select id="userMonthRanking" parameterType="java.lang.Boolean"
+            resultType="com.onelive.common.model.vo.ranking.RankingVo">
+        SELECT
+        b.firepower,
+        c.nick_name,
+        c.id userId,
+        c.sex,
+        c.user_level,
+        c.avatar,
+        c.user_type
+        FROM
+        (
+        SELECT
+        a.giving_id,
+        SUM( a.gift_number * a.gift_price *10 ) firepower
+        FROM
+        live_gift_log a
+        WHERE
+        <choose>
+            <when test="isPrevious">
+                DATE_FORMAT(a.giving_local_time,'%Y-%m') = DATE_FORMAT(DATE_SUB(#{givingLocalTime}, INTERVAL 1
+                MONTH),'%Y-%m')
+            </when>
+            <otherwise>
+                DATE_FORMAT(a.giving_local_time,'%Y-%m') = DATE_FORMAT(#{givingLocalTime},'%Y-%m')
+            </otherwise>
+        </choose>
+        GROUP BY a.giving_id
+        ) b
+        LEFT JOIN mem_user c ON b.giving_id = c.id
+        ORDER BY b.firepower DESC
+        LIMIT 30
+    </select>
+
+    <select id="getReportList" parameterType="com.onelive.common.model.dto.report.LiveGifReportDto"
+            resultType="com.onelive.common.model.dto.report.LiveGifReportDto">
+        SELECT
+	        IF(gift.gift_type = 8, '直播间弹幕',lang.gift_name) gift_name,
+	        glog.gift_id,
+	        SUM( glog.gift_price * glog.gift_number ) gift_price,
+	        COUNT(DISTINCT glog.giving_id) peopleBuyCount
+        FROM
+        live_gift_log glog
+        LEFT JOIN live_gift gift ON gift.gift_id = glog.gift_id
+        LEFT JOIN live_gift_lang lang ON lang.gift_id = glog.gift_id AND lang = 'zh_CN'
+        <where>
+            <if test="startTime != null and startTime != ''">
+                AND glog.giving_time >= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                AND glog.giving_time &lt; #{endTime}
+            </if>
+        </where>
+        GROUP BY gift_id ORDER BY gift_price DESC
+    </select>
+
+    <select id="getGiftComboTotal" parameterType="java.util.Map"
+            resultType="java.lang.Integer">
+        SELECT IF(SUM(gift_number) IS NULL, 0, SUM(gift_number))
+        FROM live_gift_log
+        WHERE gift_combo_Id = #{giftComboId}
+          AND host_id = #{hostId}
+          AND giving_id = #{givingId}
+          AND gift_id = #{giftId}
+        GROUP BY host_id, gift_id, giving_id, gift_combo_Id
+    </select>
+    
+    <select id="getFishProductLog" resultType="com.onelive.common.model.dto.platform.LiveGiftLogDto">
+        SELECT log.giving_time, log.giving_local_time, gift.gift_type
+        	FROM live_gift_log log LEFT JOIN live_gift gift ON gift.gift_id = log.gift_id
+		WHERE log.giving_id = #{userId} AND log.studio_log_id = #{logId}
+			AND gift.gift_id = #{productId} ORDER BY log.giving_local_time  DESC LIMIT 1
+    </select>
+
+    <select id="getList" resultType="com.onelive.common.model.dto.platform.LiveGiftLogDetailDto">
+      SELECT us1.user_account userAccount,
+			log.giving_time,
+			lgift.gift_name,
+			us2.user_account userAccountAnchor,
+			(log.gift_number * log.gift_price) price,
+			log.gift_number,
+			log.gift_log_no,
+			log.gold_change_no,
+			studio.studio_num,
+			gift.gift_type,
+			us1.register_country_code country_code
+ 	FROM live_gift_log log 
+		LEFT JOIN live_gift_lang lgift ON lgift.gift_id = log.gift_id AND lgift.lang = 'zh_CN'
+    	LEFT JOIN mem_user us1 ON us1.id = log.giving_id 
+		LEFT JOIN mem_user us2 ON us2.id = log.host_id 
+		LEFT JOIN live_gift gift ON gift.gift_id = log.gift_id
+		LEFT JOIN live_studio_log studio ON studio.log_id = log.studio_log_id
+		  <where>
+	        <if test="countryCode != null and countryCode != ''">
+	            AND us1.register_country_code = #{countryCode}
+	        </if>
+	        <if test="giftType != null">
+	            AND gift.gift_type = #{giftType}
+	        </if>
+		  	<if test="studioNum != null and studioNum != ''">
+	            AND studio.studio_num = #{studioNum}
+	        </if>
+		  	<if test="giftName != null and giftName != ''">
+	            AND lgift.gift_name LIKE "%"#{giftName}"%"
+	        </if>
+	        
+		  	<if test="userAccount != null and userAccount != ''">
+	            AND us1.user_account LIKE "%"#{userAccount}"%"
+	        </if>
+		  	<if test="userAccountAnchor != null and userAccountAnchor != ''">
+	            AND us2.user_account LIKE "%"#{userAccountAnchor}"%"
+	        </if>
+	        
+            <if test="startTime != null and startTime != ''">
+                AND log.giving_time >= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                AND log.giving_time &lt;= #{endTime}
+            </if>
+        </where>
+        GROUP BY log.gift_log_id ORDER BY log.giving_time DESC
+    </select>
+
+</mapper>

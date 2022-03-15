@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.game.SlaveGameIndexMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.GameIndex">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="icon_url" property="iconUrl" />
+        <result column="country_code" property="countryCode" />
+        <result column="skip_model" property="skipModel" />
+        <result column="skip_url" property="skipUrl" />
+        <result column="skip_type" property="skipType" />
+        <result column="act_id" property="actId" />
+        <result column="category_id" property="categoryId" />
+        <result column="game_code" property="gameCode" />
+        <result column="studio_num" property="studioNum" />
+        <result column="source" property="source" />
+        <result column="route" property="route" />
+        <result column="params" property="params" />
+        <result column="is_show" property="isShow" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_time" property="createTime" />
+        <result column="create_user" property="createUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="merchant_code" property="merchantCode" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, icon_url, country_code, skip_model, skip_url, skip_type, act_id, category_id, game_code, studio_num, source, route, params, is_show, is_delete, create_time, create_user, update_time, update_user, merchant_code
+    </sql>
+
+</mapper>

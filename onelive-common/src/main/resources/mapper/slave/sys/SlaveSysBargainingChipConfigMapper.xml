@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.sys.SlaveSysBargainingChipConfigMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.SysBargainingChipConfig">
+        <id column="id" property="id" />
+        <result column="country_code" property="countryCode" />
+        <result column="bargaining_chip1" property="bargainingChip1" />
+        <result column="bargaining_chip2" property="bargainingChip2" />
+        <result column="bargaining_chip3" property="bargainingChip3" />
+        <result column="bargaining_chip4" property="bargainingChip4" />
+        <result column="bargaining_chip5" property="bargainingChip5" />
+        <result column="bargaining_chip6" property="bargainingChip6" />
+        <result column="bargaining_chip7" property="bargainingChip7" />
+        <result column="status" property="status" />
+        <result column="show_unit" property="showUnit" />
+        <result column="customize_min" property="customizeMin" />
+        <result column="customize_max" property="customizeMax" />
+        <result column="bargaining_chip_min" property="bargainingChipMin" />
+        <result column="bargaining_chip_max" property="bargainingChipMax" />
+        <result column="create_time" property="createTime" />
+        <result column="create_user" property="createUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="merchant_code" property="merchantCode" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, country_code, bargaining_chip1, bargaining_chip2, bargaining_chip3, bargaining_chip4, bargaining_chip5, bargaining_chip6, bargaining_chip7, status, show_unit, customize_min, customize_max, bargaining_chip_min, bargaining_chip_max, create_time, create_user, update_time, update_user, merchant_code
+    </sql>
+
+</mapper>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.mem.MemUserAnchorMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.MemUserAnchor">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="family_id" property="familyId" />
+        <result column="live_time" property="liveTime" />
+        <result column="live_count" property="liveCount" />
+        <result column="gift_ratio" property="giftRatio" />
+        <result column="gift_money" property="giftMoney" />
+        <result column="gift_money_total" property="giftMoneyTotal" />
+        <result column="withdrawal" property="withdrawal" />
+        <result column="label" property="label" />
+        <result column="studio_open_area" property="studioOpenArea" />
+        <result column="merchant_code" property="merchantCode" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, family_id, live_time, live_count, gift_ratio, gift_money, gift_money_total, withdrawal, label,studio_open_area,merchant_code
+    </sql>
+
+</mapper>

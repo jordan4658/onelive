@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.agent.SlaveAgentInviteCodeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.AgentInviteCode">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="user_account" property="userAccount" />
+        <result column="invite_code" property="inviteCode" />
+        <result column="agent_level" property="agentLevel" />
+        <result column="invite_user_id" property="inviteUserId" />
+        <result column="invite_user_account" property="inviteUserAccount" />
+        <result column="root_user_id" property="rootUserId" />
+        <result column="merchant_code" property="merchantCode" />
+        <result column="status" property="status" />
+        <result column="is_delete" property="isDelete" />
+        <result column="is_sys" property="isSys" />
+        <result column="is_auto_create" property="isAutoCreate" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, user_account, invite_code, agent_level, invite_user_id, invite_user_account, root_user_id, merchant_code, status, is_delete, is_sys, is_auto_create, create_time
+    </sql>
+
+
+    <select id="getList" parameterType="com.onelive.common.model.req.agent.AgentInviteCodeReq"
+            resultType="com.onelive.common.model.vo.agent.AgentInviteCodeVo">
+        SELECT
+        cvo.id,
+        cvo.user_account,
+        muser.nick_name,
+        cvo.invite_user_account,
+        cvo.invite_code,
+        cvo.agent_level,
+        cvo.status,
+        cvo.create_time
+        FROM agent_invite_code cvo
+        LEFT JOIN mem_user muser on cvo.user_id = muser.id
+        <where>
+            cvo.is_delete = 0
+
+            <if test="nickName != null and nickName != ''">
+                and muser.nick_name = #{nickName}
+            </if>
+
+            <if test="startTime != null">
+                and cvo.create_time >= #{startTime}
+            </if>
+
+            <if test="endTime != null">
+                and cvo.create_time &lt; #{endTime}
+            </if>
+
+            <if test="merchantCode != null and merchantCode != ''">
+                and cvo.merchant_code = #{merchantCode}
+            </if>
+
+            <if test="userAccount != null and userAccount != ''">
+                and cvo.user_account = #{userAccount}
+            </if>
+
+            <if test="inviteCode != null and inviteCode != ''">
+                and cvo.invite_code = #{inviteCode}
+            </if>
+
+            <if test="inviteUserAccount != null and inviteUserAccount != ''">
+                and cvo.invite_user_account = #{inviteUserAccount}
+            </if>
+        </where>
+        ORDER BY cvo.create_time DESC
+    </select>
+
+
+    <update id="updateStatusByIds">
+        UPDATE agent_invite_code SET status = #{status}
+        WHERE
+        <foreach item="sid" collection="ids" index="index" open="id in (" separator="," close=")">
+            #{sid}
+        </foreach>
+    </update>
+
+</mapper>

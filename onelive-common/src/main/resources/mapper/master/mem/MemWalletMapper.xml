@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.mem.MemWalletMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.MemWallet">
+        <id column="wallet_id" property="walletId" />
+        <result column="wallet_type" property="walletType" />
+        <result column="user_id" property="userId" />
+        <result column="account" property="account" />
+        <result column="wallet_name" property="walletName" />
+        <result column="amount" property="amount" />
+        <result column="silver_bean" property="silverBean" />
+        <result column="account_dml" property="accountDml" />
+        <result column="sum_account_dml" property="sumAccountDml" />
+        <result column="sum_withdraw_amount" property="sumWithdrawAmount" />
+        <result column="sum_recharge_amount" property="sumRechargeAmount" />
+        <result column="is_withdrawal" property="isWithdrawal" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_user" property="createUser" />
+        <result column="update_user" property="updateUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="pay_max" property="payMax" />
+        <result column="pay_first" property="payFirst" />
+        <result column="pay_num" property="payNum" />
+        <result column="withdrawal_max" property="withdrawalMax" />
+        <result column="withdrawal_first" property="withdrawalFirst" />
+        <result column="withdrawal_num" property="withdrawalNum" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        wallet_id, wallet_type, user_id, account, wallet_name, amount, silver_bean, account_dml, sum_account_dml, sum_withdraw_amount, sum_recharge_amount, is_withdrawal, is_delete, create_user, update_user, create_time, update_time, pay_max, pay_first, pay_num, withdrawal_max, withdrawal_first, withdrawal_num
+    </sql>
+
+</mapper>

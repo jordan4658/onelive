@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.live.SlaveLiveStudioLogMapper">
+    
+    <select id="selectLastByStudioNum" resultType="com.onelive.common.mybatis.entity.LiveStudioLog">
+    	SELECT * FROM live_studio_log WHERE studio_num = #{studioNum} ORDER BY start_time DESC LIMIT 1
+    </select>
+    
+    <select id="getList" resultType="com.onelive.common.model.vo.live.LiveLogVO">
+         SELECT t.* FROM (
+         	SELECT
+	    		llog.studio_num,
+				anchor.id,
+				anchor.user_id,
+				list.studio_title,
+				muser.nick_name,
+				family.family_name,
+				llog.effective_audience,
+				TRUNCATE(IFNULL(SUM(gift.gift_number * gift.gift_price), 0), 2) giftMoney,
+				COUNT(bet.id) betCount,
+				IFNULL(SUM(bet.bet_amount), 0) betMoney,
+				COUNT(DISTINCT gift.giving_id) givingCount,
+				muser.user_account,
+				llog.charge_type,
+				muser.register_country_code country_code,
+				list.colour,
+				llog.start_time,
+				llog.end_time,
+				llog.live_time,
+				llog.device,
+				llog.end_reason,
+				lotteryLang.lottery_name gameName,
+				l.name
+        FROM  live_studio_log llog
+			LEFT JOIN live_studio_list list  ON llog.studio_num = list.studio_num
+			LEFT JOIN mem_user_anchor anchor ON anchor.user_id = list.user_id
+			LEFT JOIN mem_user muser ON muser.id = anchor.user_id
+			LEFT JOIN mem_family family ON anchor.family_id = family.id
+			LEFT JOIN live_gift_log gift ON gift.host_id = llog.user_id AND gift.studio_log_id = llog.log_id
+			LEFT JOIN lottery_order_bet_record bet ON bet.studio_num =  list.studio_num
+			LEFT JOIN lottery_country lottery ON lottery.id = llog.game_id
+			LEFT JOIN lottery l ON l.lottery_id = lottery.lottery_id
+	        LEFT JOIN lottery_lang lotteryLang ON lotteryLang.lottery_id = llog.game_id AND lotteryLang.lang = #{lang}
+			<where>
+				<if test="nickName != null and nickName != ''">
+		            AND muser.nick_name = #{nickName}
+		        </if>
+		        
+		        <if test="isStartTime != null and isStartTime == true">
+			        <if test="startTime != null and startTime != '' ">
+			            AND llog.start_time >= #{startTime}
+			        </if>
+			        <if test="endTime != null and endTime != '' ">
+			            AND llog.start_time <![CDATA[ < ]]> #{endTime}
+			        </if>
+		        </if>
+		        
+		        <if test="isStartTime != null and isStartTime == false">
+			        <if test="startTime != null and startTime != '' ">
+			            AND llog.end_time >= #{startTime}
+			        </if>
+			        <if test="endTime != null and endTime != '' ">
+			            AND llog.end_time <![CDATA[ < ]]> #{endTime}
+			        </if>
+		        </if>
+		        
+		        <if test="gameId != null">
+		            AND list.lottery_id = #{gameId}
+		        </if>
+		        <if test="chargeType != null">
+<!-- 		        	收费类型:0:免费 1 :按时收费 2:按场收费 -->
+					<choose>
+						<when test="chargeType == 0">
+							AND llog.product_id = 0
+						</when>
+						<when test="chargeType == 1">
+							AND llog.product_id = 6
+						</when>
+						<when test="chargeType == 2">
+							AND llog.product_id = 7
+						</when>
+					</choose>
+		        </if>
+		        <if test="countryCode != null and countryCode != ''">
+		            AND list.country_code = #{countryCode}
+		        </if>
+		        <if test="colour != null and colour != ''">
+		            AND sto.colour = #{colour}
+		        </if>
+		        <if test="merchantCode != null and merchantCode != ''">
+		            AND sto.merchant_code = #{merchantCode}
+		        </if>
+		        <if test="familyName != null and familyName != ''">
+		            AND family.familyName = #{familyName}
+		        </if>
+		        <if test="familyId != null">
+		            AND anchor.family_id = #{familyId}
+		        </if>
+		        <if test="liveTimeStart != null">
+		            AND llog.live_time >= #{liveTimeStart}
+		        </if>
+		        <if test="liveTimeEnd != null">
+		            AND llog.live_time &lt; #{liveTimeEnd}
+		        </if>
+		        <if test="userAccount != null and userAccount != ''">
+		            AND muser.user_account = #{userAccount}
+		        </if>
+        </where>
+       GROUP BY llog.log_id ORDER BY llog.start_time DESC
+       ) t 
+       <where>
+<!--        1 投注金额 2 投注次数 3本场礼物 -->
+			<if test="queryType == 1">
+				<if test="queryTypeParamStrat != null">
+					AND t.betMoney >= #{queryTypeParamStrat}
+		        </if>
+				<if test="queryTypeParamEnd != null">
+					AND t.betMoney &lt; #{queryTypeParamEnd}
+		        </if>
+	        </if>
+			<if test="queryType == 2">
+				<if test="queryTypeParamStrat != null">
+					AND t.betCount >= #{queryTypeParamStrat}
+		        </if>
+				<if test="queryTypeParamEnd != null">
+					AND t.betCount &lt; #{queryTypeParamEnd}
+		        </if>
+	        </if>
+			<if test="queryType == 3">
+				<if test="queryTypeParamStrat != null">
+					AND t.giftMoney >= #{queryTypeParamStrat}
+		        </if>
+				<if test="queryTypeParamEnd != null">
+					AND t.giftMoney &lt; #{queryTypeParamEnd}
+		        </if>
+	        </if>
+       </where>
+    </select>
+    
+    <select id="selectLastByUserId" resultType="com.onelive.common.mybatis.entity.LiveStudioLog">
+        SELECT
+	    	*
+        FROM  live_studio_log 
+        	WHERE  user_id = #{userId} AND studio_status = 1
+       	 ORDER BY start_time DESC LIMIT 1
+    </select>
+    
+    <select id="detail" resultType="com.onelive.common.model.dto.platform.LiveIncomeDetailDto">
+      		SELECT
+				SUM(CASE WHEN lgift.gift_id = 0 THEN lgift.gift_price else 0 END) barrageMoney,
+				SUM(CASE WHEN gift.gift_type in (6, 7) THEN lgift.gift_price ELSE 0 END) watchMoney,
+				SUM(CASE WHEN gift.gift_type not in (6, 7) THEN (lgift.gift_number * lgift.gift_price) ELSE 0 END) giftMoney
+        	FROM  live_studio_log slog 
+				LEFT JOIN live_gift_log lgift ON lgift.studio_log_id = slog.log_id
+				LEFT JOIN live_gift gift ON gift.gift_id = lgift.gift_id
+			WHERE slog.log_id = #{logId}
+    </select>
+    
+    <select id="liveHistory" resultType="com.onelive.common.model.vo.live.LiveHistoryVo">
+        SELECT
+			DATE_FORMAT(start_time, '%Y-%m-%d') liveDate
+        FROM  live_studio_log 
+      		WHERE  user_id = #{userId} AND  DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(start_time)
+       	 ORDER BY start_time DESC 
+    </select>
+    
+    
+
+</mapper>

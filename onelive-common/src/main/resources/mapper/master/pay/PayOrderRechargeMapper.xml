@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.pay.PayOrderRechargeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.PayOrderRecharge">
+        <id column="order_id" property="orderId"/>
+        <result column="pay_way_id" property="payWayId"/>
+        <result column="order_type" property="orderType"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="account" property="account"/>
+        <result column="prepay_id" property="prepayId"/>
+        <result column="pay_way_tag" property="payWayTag"/>
+        <result column="sum_amt" property="sumAmt"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="cancel_reason" property="cancelReason"/>
+        <result column="pay_date" property="payDate"/>
+        <result column="pay_user" property="payUser"/>
+        <result column="pay_note" property="payNote"/>
+        <result column="order_note" property="orderNote"/>
+        <result column="is_delete" property="isDelete"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="source" property="source"/>
+        <result column="is_first" property="isFirst"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        order_id
+        , pay_way_id, order_type, order_no, account, prepay_id, pay_way_tag, sum_amt, order_status, cancel_reason, pay_date, pay_user, pay_note, order_note, is_delete, create_user, create_time, update_user, update_time, source,is_first
+    </sql>
+
+</mapper>

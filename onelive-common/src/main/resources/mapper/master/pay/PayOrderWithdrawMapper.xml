@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.pay.PayOrderWithdrawMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.PayOrderWithdraw">
+        <id column="withdraw_id" property="withdrawId"/>
+        <result column="bank_accid" property="bankAccid"/>
+        <result column="withdraw_no" property="withdrawNo"/>
+        <result column="account" property="account"/>
+        <result column="withdraw_date" property="withdrawDate"/>
+        <result column="withdraw_amt" property="withdrawAmt"/>
+        <result column="withdraw_status" property="withdrawStatus"/>
+        <result column="operation_explain" property="operationExplain"/>
+        <result column="pay_amt" property="payAmt"/>
+        <result column="pay_mem_name" property="payMemName"/>
+        <result column="pay_date" property="payDate"/>
+        <result column="is_delete" property="isDelete"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_first" property="isFirst"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        withdraw_id
+        , bank_accid, withdraw_no, account, withdraw_date, withdraw_amt, withdraw_status, operation_explain, pay_amt, pay_mem_name, pay_date, is_delete, create_user, create_time, update_user, update_time,is_first
+    </sql>
+
+</mapper>

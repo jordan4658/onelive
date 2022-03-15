@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.platform.SlaveLiveFloatMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.LiveFloat">
+        <id column="id" property="id" />
+        <result column="float_name" property="floatName" />
+        <result column="use_country" property="useCountry" />
+        <result column="skip_model" property="skipModel" />
+        <result column="skip_url" property="skipUrl" />
+        <result column="is_show" property="isShow" />
+        <result column="create_time" property="createTime" />
+        <result column="create_user" property="createUser" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="merchant_code" property="merchantCode" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, float_name, use_country, skip_model, skip_url, is_show, create_time, create_user, update_user, update_time, merchant_code
+    </sql>
+
+ 	<select id="getFloatList" resultType="com.onelive.common.model.dto.platform.LiveFloatForIndexDto">
+      SELECT 
+      		lfloat.float_name,
+			lfloat.use_country,
+			lfloat.skip_model,
+			lfloat.skip_url,
+			lfloat.show_type,
+			lfloat.category_id,
+			lfloat.lottery_id,
+        	lfloat.show_type,
+        	lang.img_url
+       	FROM live_float lfloat
+        	LEFT JOIN live_float_lang lang ON lang.float_id = lfloat.id
+       	WHERE  
+       		lang.lang = #{lang} AND is_show = 1 AND FIND_IN_SET(#{countryCode}, use_country)
+		GROUP BY lfloat.id
+    </select>
+    
+</mapper>

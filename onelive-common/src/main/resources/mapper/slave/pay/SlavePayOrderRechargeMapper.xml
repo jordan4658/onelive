@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.pay.SlavePayOrderRechargeMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.PayOrderRecharge">
+        <id column="order_id" property="orderId"/>
+        <result column="pay_way_id" property="payWayId"/>
+        <result column="order_type" property="orderType"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="account" property="account"/>
+        <result column="prepay_id" property="prepayId"/>
+        <result column="pay_way_tag" property="payWayTag"/>
+        <result column="sum_amt" property="sumAmt"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="cancel_reason" property="cancelReason"/>
+        <result column="pay_date" property="payDate"/>
+        <result column="pay_user" property="payUser"/>
+        <result column="pay_note" property="payNote"/>
+        <result column="order_note" property="orderNote"/>
+        <result column="is_delete" property="isDelete"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="source" property="source"/>
+        <result column="is_first" property="isFirst"/>
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        order_id
+        , pay_way_id, order_type, order_no, account, prepay_id, pay_way_tag, sum_amt, order_status, cancel_reason, pay_date, pay_user, pay_note, order_note, is_delete, create_user, create_time, update_user, update_time, source,is_first
+    </sql>
+    <select id="rechargeRecordList" resultType="com.onelive.common.model.vo.mem.MemGoldchangeVO">
+        SELECT a.sum_amt      price,
+               a.create_time  payDate,
+               a.order_no     orderNo,
+               a.order_status orderStatus,
+               b.pay_way_name payWayName
+        FROM pay_order_recharge a
+                 left JOIN pay_way b on a.pay_way_id = b.pay_way_id
+        WHERE a.account = #{account}
+          and a.create_time &gt;= #{startDate}
+          and a.create_time &lt;= #{endDate}
+        order by a.create_time desc
+    </select>
+    <resultMap id="OfflineListPageBaseResultMap" type="com.onelive.common.model.vo.pay.OfflinePayOrderRechargeBackVO">
+        <id column="order_id" property="orderId"/>
+        <result column="pay_way_id" property="payWayId"/>
+        <result column="pay_way_name" property="payWayName"/>
+        <result column="order_type" property="orderType"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="account" property="account"/>
+        <result column="nickname" property="nickname"/>
+        <result column="sum_amt" property="sumAmt"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="cancel_reason" property="cancelReason"/>
+        <result column="pay_date" property="payDate"/>
+        <result column="pay_user" property="payUser"/>
+        <result column="pay_note" property="payNote"/>
+        <result column="order_note" property="orderNote"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <select id="offlineListPage" resultMap="OfflineListPageBaseResultMap">
+        SELECT
+        a.account,
+        b.nickname,
+        a.order_id,
+        a.order_no,
+        a.order_status,
+        a.sum_amt,
+        a.order_type,
+        a.update_user,
+        a.update_time,
+        a.create_time,
+        a.pay_user,
+        a.pay_note,
+        a.pay_date,
+        a.cancel_reason,
+        a.pay_way_id,
+        c.pay_way_name
+        FROM
+        pay_order_recharge a
+        LEFT JOIN mem_user b ON a.account = b.user_account
+        LEFT JOIN pay_way c ON a.pay_way_id = c.pay_way_id
+        WHERE
+        a.order_type = #{orderType}
+        <if test=" orderStatus !=null ">
+            and a.order_status =#{orderStatus}
+        </if>
+        <if test=" account !=null and account != '' ">
+            and a.account =#{account}
+        </if>
+        <if test=" orderNo !=null and orderNo != '' ">
+            and a.order_no =#{orderNo}
+        </if>
+        <if test="startDate !=null  ">
+            and a.create_time &gt;= #{startDate}
+        </if>
+        <if test="endDate !=null  ">
+            and a.create_time &lt;= #{endDate}
+        </if>
+    </select>
+
+    <resultMap id="OnlineListPageBaseResultMap" type="com.onelive.common.model.vo.pay.OnlinePayOrderRechargeBackVO">
+        <id column="order_id" property="orderId"/>
+        <result column="provider_id" property="providerId"/>
+        <result column="provider_name" property="providerName"/>
+        <result column="order_type" property="orderType"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="account" property="account"/>
+        <result column="nick_name" property="nickname"/>
+        <result column="sum_amt" property="sumAmt"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="cancel_reason" property="cancelReason"/>
+        <result column="pay_date" property="payDate"/>
+        <result column="pay_user" property="payUser"/>
+        <result column="pay_note" property="payNote"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <select id="onlineListPage" resultMap="OnlineListPageBaseResultMap">
+        SELECT
+        a.account,
+        b.nick_name,
+        a.order_id,
+        a.order_no,
+        a.order_status,
+        a.sum_amt,
+        a.order_type,
+        a.update_user,
+        a.update_time,
+        a.create_time,
+        a.pay_user,
+        a.pay_note,
+        a.pay_date,
+        a.cancel_reason,
+        d.provider_id,
+        d.provider_name
+        FROM
+        pay_order_recharge a
+        LEFT JOIN mem_user b ON a.account = b.user_account
+        LEFT JOIN pay_way c ON a.pay_way_id = c.pay_way_id
+        LEFT JOIN pay_three_provider d ON c.provider_id = d.provider_id
+        WHERE
+        a.order_type = #{orderType}
+        <if test=" providerId !=null and providerId != '' ">
+            and d.provider_id =#{providerId}
+        </if>
+        <if test=" orderStatus !=null ">
+            and a.order_status =#{orderStatus}
+        </if>
+        <if test=" account !=null and account != '' ">
+            and a.account =#{account}
+        </if>
+        <if test=" orderNo !=null and orderNo != '' ">
+            and a.order_no =#{orderNo}
+        </if>
+        <if test="startDate !=null  ">
+            and a.create_time &gt;= #{startDate}
+        </if>
+        <if test="endDate !=null  ">
+            and a.create_time &lt;= #{endDate}
+        </if>
+    </select>
+
+    <select id="sumRecharge" resultType="java.math.BigDecimal">
+        select IFNULL(sum(sum_amt), 0)
+        from pay_order_recharge
+        where pay_date >= #{startDate}
+          and pay_date <![CDATA[ < ]]> #{endDate}
+          and order_status = 2
+    </select>
+
+    <select id="sumFirstNum" resultType="java.lang.Integer">
+        select count(order_id)
+        from pay_order_recharge
+        where pay_date >= #{startDate}
+          and pay_date <![CDATA[ < ]]> #{endDate}
+          and order_status = 2
+          and is_first = 1
+    </select>
+
+    <select id="queryOnlineCompanySummery" resultType="com.onelive.common.model.dto.report.OnlineCompanyDTO">
+        SELECT sum(yyy.successMoney)  AS successMoney,
+               sum(yyy.successPeople) AS successPeople,
+               sum(yyy.successCount)  AS successCount,
+               sum(yyy.failCount)     AS failCount
+        FROM (
+                 SELECT IFNULL(sum(sum_amt), 0)   AS successMoney,
+                        COUNT(DISTINCT (account)) AS successPeople,
+                        COUNT(account)            AS successCount,
+                        0                         AS failCount
+                 FROM pay_order_recharge
+                 WHERE pay_date between #{startDate} and #{endDate}
+                   AND order_type = #{orderType}
+                   AND order_status = 2
+
+                 UNION ALL
+
+                 SELECT 0              AS successMoney,
+                        0              AS successPeople,
+                        0              AS successCount,
+                        COUNT(account) AS failCount
+                 FROM pay_order_recharge
+                 WHERE pay_date between #{startDate} and #{endDate}
+                   AND order_type = #{orderType}
+                   AND order_status IN (3, 4)
+             ) yyy
+    </select>
+    <select id="getByAccountAndOrderNo" resultType="com.onelive.common.model.vo.mem.MemGoldchangeVO">
+        SELECT a.sum_amt      price,
+               a.create_time  payDate,
+               a.order_no     orderNo,
+               a.order_status orderStatus,
+               b.pay_way_name payWayName
+        FROM pay_order_recharge a
+                 left JOIN pay_way b on a.pay_way_id = b.pay_way_id
+        WHERE a.account = #{account}
+          and a.order_no = #{orderNo}
+    </select>
+
+
+    <select id="queryOnlineReportDTOSummery" resultType="com.onelive.common.model.dto.report.OnlineReportDTO">
+        select yyy.pay_type_name,
+        yyy.provider_name,
+        yyy.pay_way_name,
+        sum(yyy.successMoney) AS successMoney,
+        sum(yyy.successPeople) AS successPeople,
+        sum(yyy.successCount) AS successCount,
+        sum(yyy.failCount) AS failCount
+        from (
+        SELECT py.pay_type_name,
+        tp.provider_name,
+        pw.pay_way_name,
+        IFNULL(sum(kk.sum_amt), 0) AS successMoney,
+        COUNT(DISTINCT (kk.account)) AS successPeople,
+        COUNT(kk.account) AS successCount,
+        0 AS failCount
+        FROM pay_order_recharge kk,
+        pay_three_provider tp,
+        pay_type py,
+        pay_way pw
+        WHERE kk.pay_way_id = pw.pay_way_id
+        and pw.provider_id = tp.provider_id
+        and pw.pay_type_code = py.pay_type_code
+        and kk.pay_date between #{beginDate} and #{endDate}
+        <if test="providerName != null and providerName != ''  ">
+            and tp.provider_name like "%"#{providerName}"%"
+        </if>
+
+        and kk.order_type = 1 -- 线上支付
+        and kk.order_status = 2 -- 已付款
+        group by py.pay_type_name, tp.provider_name, pw.pay_way_name
+
+        union all
+
+        SELECT py.pay_type_name,
+        tp.provider_name,
+        pw.pay_way_name,
+        0 AS successMoney,
+        0 AS successPeople,
+        0 AS successCount,
+        COUNT(kk.account) AS failCount
+        FROM pay_order_recharge kk,
+        pay_three_provider tp,
+        pay_type py,
+        pay_way pw
+        WHERE kk.pay_way_id = pw.pay_way_id
+        and pw.provider_id = tp.provider_id
+        and pw.pay_type_code = py.pay_type_code
+        and kk.pay_date between #{beginDate} and #{endDate}
+        <if test="providerName != null and providerName != ''  ">
+            and tp.provider_name like "%"#{providerName}"%"
+        </if>
+        and kk.order_type = 1 -- 线上支付
+        and kk.order_status in (3, 4) -- 失败、取消
+        group by py.pay_type_name, tp.provider_name, pw.pay_way_name
+        ) yyy
+        group by yyy.pay_type_name, yyy.provider_name, yyy.pay_way_name
+    </select>
+
+    <select id="getOnlineAmtAndOfflineAmt" resultType="com.onelive.common.model.vo.report.OnlineAmtAndOfflineAmtVO">
+        SELECT
+            a.order_type orderType,
+            SUM(a.sum_amt) amt
+        FROM
+            pay_order_recharge a
+        WHERE
+            a.order_status=2
+        <if test=" startTime!=null">
+            and a.create_time &gt;= #{startTime}
+        </if>
+        <if test=" endTime!=null">
+            and a.create_time &lt;= #{endTime}
+        </if>
+        GROUP BY a.order_type
+        order by a.order_type desc
+    </select>
+
+    <select id="totalRecharge" resultType="com.onelive.common.model.dto.report.StatSourceDTO" >
+        SELECT
+        a.source as source,
+        SUM(a.sum_amt) as total
+        FROM
+        pay_order_recharge a
+        WHERE
+        a.order_status=2
+            and a.is_delete = 0
+        <if test=" startTime!=null">
+            and a.update_time &gt;= #{startTime}
+        </if>
+        <if test=" endTime!=null">
+            and a.update_time &lt;= #{endTime}
+        </if>
+        GROUP BY a.source
+    </select>
+
+    <select id="firstRecharge" resultType="java.math.BigDecimal" >
+        SELECT
+        SUM(a.sum_amt) as total
+        FROM
+        pay_order_recharge a
+        WHERE
+        a.order_status=2
+            and a.is_delete = 0
+            and a.is_first =1
+        <if test=" startTime!=null">
+            and a.update_time &gt;= #{startTime}
+        </if>
+        <if test=" endTime!=null">
+            and a.update_time &lt;= #{endTime}
+        </if>
+    </select>
+
+    <select id="countRechargeUser" resultType="int" >
+        SELECT COUNT(1) FROM (
+            SELECT create_user FROM pay_order_recharge
+            WHERE
+            order_status = 2
+            AND is_delete = 0
+            <if test=" startTime!=null">
+                and update_time &gt;= #{startTime}
+            </if>
+            <if test=" endTime!=null">
+                and update_time &lt;= #{endTime}
+            </if>
+            GROUP BY create_user
+        ) AS a
+    </select>
+
+</mapper>

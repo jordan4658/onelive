@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.lottery.LotteryCountryMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.LotteryCountry">
+        <id column="id" property="id" />
+
+        <result column="lottery_cate_id" property="lotteryCateId" />
+        <result column="lottery_id" property="lotteryId" />
+        <result column="country_id" property="countryId" />
+        <result column="alias_name" property="aliasName" />
+        <result column="icon_url" property="iconUrl" />
+        <result column="is_forbid" property="isForbid" />
+        <result column="create_time" property="createTime" />
+        <result column="create_user" property="createUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="merchant_code" property="merchantCode" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,lottery_cate_id, lottery_id, country_id, alias_name, icon_url, create_time, create_user, update_time, update_user, merchant_code,is_forbid
+    </sql>
+
+</mapper>

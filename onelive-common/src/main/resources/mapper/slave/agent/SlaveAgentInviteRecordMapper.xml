@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.agent.SlaveAgentInviteRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.AgentInviteRecord">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="invite_code" property="inviteCode" />
+        <result column="invite_user_id" property="inviteUserId" />
+        <result column="merchant_code" property="merchantCode" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, invite_code, invite_user_id, merchant_code, create_time
+    </sql>
+
+    <select id="getReportList" parameterType="com.onelive.common.model.req.report.AgentReportListReq"
+            resultType="com.onelive.common.model.vo.report.AgentReportListVo">
+        SELECT
+        u.nick_name,
+        u.user_account,
+        record.invite_code,
+        COUNT( record.id ) new_regist_count,
+        ( SELECT count(*) FROM agent_invite_record WHERE invite_user_id = u.id ) total_regist_count
+        FROM
+        agent_invite_record record
+        LEFT JOIN mem_user u ON u.id = record.invite_user_id
+        <where>
+            record.invite_user_id != 0
+            <if test="nickName != null and nickName != ''">
+                and u.nick_name = #{nickName}
+            </if>
+
+            <if test="userAccount != null and userAccount != ''">
+                and u.user_account = #{userAccount}
+            </if>
+
+            <if test="inviteCode != null and inviteCode != ''">
+                and record.invite_code = #{inviteCode}
+            </if>
+
+            <if test="startTime != null">
+                and record.create_time >= #{startTime}
+            </if>
+
+            <if test="endTime != null">
+                and record.create_time &lt; #{endTime}
+            </if>
+        </where>
+        GROUP BY
+            record.invite_code
+        ORDER BY
+            new_regist_count DESC
+    </select>
+
+    <select id="getYesterdayAgentUserBetCount" resultType="java.lang.Integer">
+       SELECT COUNT(*) FROM (
+			SELECT agent.invite_user_id 
+				FROM agent_invite_record agent 
+			LEFT JOIN lottery_order_bet_record record ON agent.user_id = record.user_id 
+			WHERE  
+				TO_DAYS(NOW()) - TO_DAYS(record.CREATE_time) = 1
+				AND agent.invite_user_id != 0 GROUP BY agent.invite_user_id
+		) t
+
+    </select>
+    
+
+    <select id="getAgentUserYesterdaBetAmount" resultType="com.onelive.common.model.dto.agent.AgentInviteRecordDto">
+		SELECT agent.invite_user_id , SUM(record.bet_amount * record.bet_count) betAmount, IF(us.user_type = 2, true, false) isAuthor 
+			FROM agent_invite_record agent 
+		LEFT JOIN lottery_order_bet_record record ON agent.user_id = record.user_id 
+		LEFT JOIN mem_user us ON us.id = agent.invite_user_id
+		WHERE  TO_DAYS(NOW()) - TO_DAYS(record.CREATE_time) = 1
+			AND agent.invite_user_id != 0
+			GROUP BY agent.invite_user_id 
+				ORDER BY agent.invite_user_id 
+    </select>
+    
+    
+</mapper>

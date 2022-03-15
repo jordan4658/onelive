@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: onelive-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 3.36.116.112:8848
+      config:
+        #server-addr: 159.138.152.65:4042
+        server-addr: 3.36.116.112:8848
+        prefix: gateway
+        file-extension: yml
+        #group: dev
+        #namespace: 16142b90-f1c3-427d-93d7-f4ca596f7c2c
+        enabled: true
+        refresh-enabled: false
+server:
+  port: 4040

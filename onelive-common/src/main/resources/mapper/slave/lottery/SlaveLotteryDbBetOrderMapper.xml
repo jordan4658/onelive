@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.lottery.SlaveLotteryDbBetOrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.LotteryDbBetOrder">
+        <id column="id" property="id" />
+        <result column="seq_no" property="seqNo" />
+        <result column="player_id" property="playerId" />
+        <result column="game_date" property="gameDate" />
+        <result column="g_type" property="gType" />
+        <result column="m_type" property="mType" />
+        <result column="room_type" property="roomType" />
+        <result column="currency" property="currency" />
+        <result column="bet" property="bet" />
+        <result column="win" property="win" />
+        <result column="total" property="total" />
+        <result column="denom" property="denom" />
+        <result column="before_balance" property="beforeBalance" />
+        <result column="after_balance" property="afterBalance" />
+        <result column="last_modify_time" property="lastModifyTime" />
+        <result column="player_ip" property="playerIp" />
+        <result column="client_type" property="clientType" />
+        <result column="is_handle" property="isHandle" />
+        <result column="game_name" property="gameName" />
+        <result column="member_id" property="memberId" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, seq_no, player_id, game_date, g_type, m_type, room_type, currency, bet, win, total, denom, before_balance, after_balance, last_modify_time, player_ip, client_type, is_handle, game_name, member_id, create_time
+    </sql>
+
+</mapper>

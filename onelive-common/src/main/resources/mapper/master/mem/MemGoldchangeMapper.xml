@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.mem.MemGoldchangeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.MemGoldchange">
+        <id column="gold_chang_id" property="goldChangId"/>
+        <result column="gold_type" property="goldType"/>
+        <result column="gold_change_order_no" property="goldChangeOrderNo"/>
+        <result column="chang_wallet_type" property="changWalletType"/>
+        <result column="ref_no" property="refNo"/>
+        <result column="account" property="account"/>
+        <result column="change_type" property="changeType"/>
+        <result column="transfer_in_wallet_id" property="transferInWalletId"/>
+        <result column="transfer_out_wallet_id" property="transferOutWalletId"/>
+        <result column="gold_num" property="goldNum"/>
+        <result column="amount" property="amount"/>
+        <result column="recgold_num" property="recgoldNum"/>
+        <result column="pre_cgdml" property="preCgdml"/>
+        <result column="after_cgdml" property="afterCgdml"/>
+        <result column="opnote" property="opnote"/>
+        <result column="is_delete" property="isDelete"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="flow_type" property="flowType"/>
+        <result column="third_type" property="thirdType"/>
+        <result column="rec_silver_num" property="recSilverNum"/>
+        <result column="silver_num" property="silverNum"/>
+        <result column="silver_amount" property="silverAmount"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        gold_chang_id,gold_change_order_no
+        ,gold_type, chang_wallet_type, ref_no, account, change_type, transfer_in_wallet_id,
+transfer_out_wallet_id, gold_num, amount, recgold_num, pre_cgdml, after_cgdml, opnote,
+is_delete, create_user, create_time, update_user, update_time,flow_type,third_type,rec_silver_num,silver_num,silver_amount
+    </sql>
+
+</mapper>

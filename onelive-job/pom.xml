@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>onelive</artifactId>
+        <groupId>com.onelive</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>onelive-job</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.onelive</groupId>
+            <artifactId>onelive-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- 引入任务调度中心 -->
+        <dependency>
+            <groupId>com.xuxueli</groupId>
+            <artifactId>xxl-job-core</artifactId>
+            <version>${job-core.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <!--多模块打包：只需在启动类所在模块的POM文件：指定打包插件 -->
+    <build>
+        <plugins>
+            <plugin>
+                <!--该插件主要用途：构建可执行的JAR -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.3.3.RELEASE</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>

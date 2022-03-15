@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.pay.SlavePayShortcutOptionsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.PayShortcutOptions">
+        <id column="shortcut_options_id" property="shortcutOptionsId"/>
+        <result column="pay_way_id" property="payWayId"/>
+        <result column="is_enable" property="isEnable"/>
+        <result column="is_delete" property="isDelete"/>
+        <result column="shortcut_options_content" property="shortcutOptionsContent"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        shortcut_options_id
+        , pay_way_id,is_enable,shortcut_options_content, is_delete,create_user, update_user, create_time, update_time
+    </sql>
+
+
+    <select id="listPage" resultType="com.onelive.common.model.vo.pay.PayShortcutOptionsVO">
+        select
+        a.shortcut_options_id,a.is_enable,a.pay_way_id,
+        a.shortcut_options_content, a.create_user,
+        a.is_delete,
+        b.country_code,
+        a.update_user, a.create_time, a.update_time
+        from pay_shortcut_options a
+        left join pay_way b on a.pay_way_id=b.pay_way_id
+        where a.is_delete=0
+        <if test="payWayId !=null ">
+            and a.pay_way_id=#{payWayId}
+        </if>
+        <if test="countryCode !=null and  countryCode!='' ">
+            and b.country_code=#{countryCode}
+        </if>
+        <if test="isEnable !=null ">
+            and a.is_enable=#{isEnable}
+        </if>
+        order by a.create_time desc
+    </select>
+
+    <select id="getByLangId" resultType="com.onelive.common.model.req.pay.shortcutOptionsUnitLang">
+        select
+        b.lang ,
+        from sys_country b
+        left join pay_shortcut_options a  on  b.lang=a.lang_value
+        where
+        b.is_frozen=0
+        and a.is_delete=0
+        <if test="langId !=null and langId !='' ">
+            and a.lang_id=#{langId}
+        </if>
+        order by a.create_time desc
+    </select>
+    <select id="selectShortcutOptionsById" resultType="com.onelive.common.model.vo.pay.PayShortcutOptionsByIdVO">
+        select
+        a.shortcut_options_id,
+        a.pay_way_id,
+        a.shortcut_options_content,
+        b.country_code
+        from pay_shortcut_options a
+        left join pay_way b on a.pay_way_id=b.pay_way_id
+        where
+        a.is_delete=0
+        and a.shortcut_options_id=#{id}
+    </select>
+
+
+</mapper>

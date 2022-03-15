@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: onelive-manage #在注册中心显示的名字
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 3.36.116.112:8848
+      config:
+        #server-addr: 159.138.152.65:4042
+        server-addr: 3.36.116.112:8848
+        prefix: manage
+        file-extension: yml
+        #group: dev
+        #namespace: 031c3c8b-e37c-4a86-b945-f0f8f834e336
+        enabled: true
+        refresh-enabled: false
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+server:
+  port: 9011
+  tomcat.uri-encoding: UTF-8
+  servlet:
+    context-path: /manage
+
+businessSwitch:
+  #发送短信是否在header里面返回短信验证码（测试环境启用）
+  smsSwitch: true

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.sys.SysShortMsgConfigMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.SysShortMsgConfig">
+        <id column="id" property="id" />
+        <result column="msg_platform" property="msgPlatform" />
+        <result column="is_frozen" property="isFrozen" />
+        <result column="area_code" property="areaCode" />
+        <result column="config_name" property="configName" />
+        <result column="msg_user" property="msgUser" />
+        <result column="msg_pwd" property="msgPwd" />
+        <result column="main_number" property="mainNumber" />
+        <result column="url" property="url" />
+        <result column="port" property="port" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_time" property="createTime" />
+        <result column="create_user" property="createUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="merchant_code" property="merchantCode" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, msg_platform, is_frozen, area_code, config_name, msg_user, msg_pwd, main_number, url, port, is_delete,create_time, create_user, update_time, update_user, merchant_code
+    </sql>
+
+</mapper>

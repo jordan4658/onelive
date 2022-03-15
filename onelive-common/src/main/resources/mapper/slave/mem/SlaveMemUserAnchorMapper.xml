@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.mem.SlaveMemUserAnchorMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.MemUserAnchor">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="family_id" property="familyId" />
+        <result column="live_time" property="liveTime" />
+        <result column="live_count" property="liveCount" />
+        <result column="gift_ratio" property="giftRatio" />
+        <result column="gift_money" property="giftMoney" />
+        <result column="gift_money_total" property="giftMoneyTotal" />
+        <result column="withdrawal" property="withdrawal" />
+        <result column="label" property="label" />
+        <result column="studio_open_area" property="studioOpenArea" />
+        <result column="merchant_code" property="merchantCode" />
+        <result column="is_focus_award" property="isFocusAward" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, family_id, live_time, live_count, gift_ratio, is_focus_award, gift_money, gift_money_total, withdrawal, label,studio_open_area,merchant_code
+    </sql>
+    
+	<select id ="getList" resultType="com.onelive.common.model.vo.mem.MemUserAnchorVO">
+	  SELECT 
+	  		an.id,
+	  		an.user_id,
+	  		an.family_id,
+	  		an.live_time,
+	  		an.live_count,
+	  		mu.is_frozen,
+	  		IF(an.family_id != null, fa.gift_ratio, an.gift_ratio) gift_ratio,
+	  		wallet.amount balance,
+	  		an.gift_total,
+	  		an.withdrawal,
+	  		an.label,
+	  		mu.nick_name,
+	  		mu.accno,
+	  		mu.avatar,
+	  		mu.register_country_code country_code,
+	  		mu.user_type,
+	  		fa.family_name,
+	  		mu.remark,
+	  		mu.user_account,
+	  		an.is_focus_award,
+	  		an.focus_award
+	  	FROM mem_user_anchor an
+			LEFT JOIN mem_user mu ON mu.id = an.user_id
+			LEFT JOIN sys_country con ON con.id = mu.country_id
+			LEFT JOIN mem_family fa ON fa.id = an.family_id
+			LEFT JOIN live_studio_log stlog ON stlog.user_id = an.user_id
+			LEFT JOIN mem_wallet wallet on wallet.user_id = an.user_id AND wallet.wallet_type = 1
+		WHERE mu.user_type = 2
+			<if test="countryCode != null and countryCode != ''">
+				AND mu.register_country_code = #{countryCode}
+	        </if>
+			<if test="userAccount != null and userAccount != ''">
+				AND mu.user_account = #{userAccount}
+			</if>
+			<if test="merchantCode != null and merchantCode != ''">
+				AND mu.merchant_code = #{merchantCode}
+			</if>
+			<if test="nickName != null and nickName != ''">
+				AND mu.nick_name = #{nickName}
+			</if>
+	        <if test="startTime != null and startTime != ''">
+				AND stlog.start_time >= #{startTime}
+	        </if>
+	        <if test="endTime != null and endTime != ''">
+				AND stlog.start_time &lt; #{endTime}
+	        </if>
+	        <if test="familyId != null">
+				AND an.family_id = #{familyId}
+	        </if>
+	        GROUP BY an.user_id
+
+			ORDER BY
+			<if test="queryType == null">
+				mu.register_time
+			</if>
+			<if test="queryType == 1">
+				wallet.amount
+			</if>
+<!-- 	       2:下级会员  -->
+<!-- 			<if test="queryType == 2"> -->
+<!-- 				AND con.id = #{countryId} -->
+<!-- 	        </if> -->
+			<if test="queryType == 3">
+				an.live_count
+			</if>
+			DESC
+	</select>
+	
+	<select id ="selectLiveAnchorDetail" resultType="com.onelive.common.model.vo.live.LiveAnchorDetailVO">
+		SELECT
+			us.nick_name,
+			us.avatar,
+			us.nick_name,
+			sto.studio_num,
+			sto.studio_title,
+			sto.user_id,
+			sto.sharpness,
+			sto.try_see_time,
+			sto.product_id,
+			sto.studio_live_path,
+			sto.colour,
+			sto.column_code,
+			sto.game_id,
+			sto.studio_live_push_flow
+		FROM
+			mem_user us
+		LEFT JOIN mem_user_anchor anchor ON anchor.user_id = us.id
+		LEFT JOIN live_studio_list sto ON sto.user_id = us.id
+			WHERE us.id = #{userId} LIMIT 1
+	</select>
+
+
+	<select id ="getListForFamily" resultType="com.onelive.common.model.vo.mem.AnchorForFamilyVO">
+		  SELECT 
+	  		an.id,
+	  		an.user_id,
+	  		SUM(stlog.live_time) live_time,
+	  		an.live_count,
+	  		IFNULL(wallet.amount, 0) balance,
+	  		mu.nick_name,
+	  		mu.user_account,
+	  		an.is_focus_award,
+	  		mu.is_frozen,
+	  		mu.avatar
+	  	FROM mem_user_anchor an 
+			LEFT JOIN mem_user mu ON mu.id = an.user_id
+			LEFT JOIN live_studio_log stlog ON stlog.user_id = an.user_id
+			LEFT JOIN mem_wallet wallet ON wallet.user_id = an.user_id AND wallet.wallet_type = 1
+		WHERE mu.user_type = 2
+		AND an.family_id = #{familyId}
+<!-- 			<if test="merchantCode != null and merchantCode != ''"> -->
+<!-- 				AND mu.merchant_code = #{merchantCode} -->
+<!-- 			</if> -->
+<!-- 	        <if test="startTime != null and startTime != ''"> -->
+<!-- 				AND stlog.start_time >= #{startTime} -->
+<!-- 	        </if> -->
+<!-- 	        <if test="endTime != null and endTime != ''"> -->
+<!-- 				AND stlog.start_time &lt; #{endTime} -->
+<!-- 	        </if> -->
+	        <if test="nickName != null and nickName != ''">
+				AND (mu.nick_name = #{nickName} OR mu.user_account = #{nickName})
+	        </if>
+	       GROUP BY an.id
+	</select>
+	
+	<select id ="getFocusAward" resultType="com.onelive.common.mybatis.entity.MemUserAnchor">
+		SELECT
+			anchor.is_focus_award,
+			anchor.focus_award
+		FROM
+			mem_user_anchor anchor
+		WHERE
+			anchor.user_id = #{userId} LIMIT  1
+	</select>
+	
+	
+	<select id ="getReportList" resultType="com.onelive.common.model.dto.report.AnchorReportDto" 
+			parameterType="com.onelive.common.model.dto.report.AnchorReportDto">
+		SELECT
+			muser.nick_name,
+			muser.user_account,
+			IFNULL(SUM(gift.gift_price * gift.gift_number), 0) / 10 giftAmount,
+			IFNULL(SUM(focus.award), 0) / 10 focusAmount,
+			IFNULL(SUM(bet.bet_count * bet.bet_amount * 0.003), 0) rebatesAmount,
+			COUNT(DISTINCT bet.user_id) betCount,
+			COUNT(invite.id) registerCount,
+			COUNT(DISTINCT muser.user_account) firstChargeCount
+		FROM
+			mem_user muser
+		LEFT JOIN live_gift_log gift ON gift.host_id = muser.id
+		LEFT JOIN live_studio_log studio ON studio.user_id = muser.id
+		 	<if test="startTime != null and startTime != ''">
+				AND gift.giving_time >= #{startTime}
+	        </if>
+	        <if test="endTime != null and endTime != ''">
+				AND gift.giving_time &lt; #{endTime}
+	        </if>
+	        
+		LEFT JOIN mem_focus_user focus ON focus.focus_id = muser.id
+		 	<if test="startTime != null and startTime != ''">
+				AND focus.create_time >= #{startTime}
+	        </if>
+	        <if test="endTime != null and endTime != ''">
+				AND focus.create_time &lt; #{endTime}
+	        </if>
+	        
+       	LEFT JOIN agent_invite_record invite ON invite.user_id = muser.id
+       		<if test="startTime != null and startTime != ''">
+				AND invite.create_time >= #{startTime}
+	        </if>
+	        <if test="endTime != null and endTime != ''">
+				AND invite.create_time &lt; #{endTime}
+	        </if>
+	        
+	    LEFT JOIN lottery_order_bet_record bet ON invite.user_id = bet.user_id
+	    	<if test="startTime != null and startTime != ''">
+				AND bet.create_time >= #{startTime}
+	        </if>
+	        <if test="endTime != null and endTime != ''">
+				AND bet.create_time &lt; #{endTime}
+	        </if>
+	    LEFT JOIN pay_order_recharge recharge ON recharge.account = muser.user_account
+	    	<if test="startTime != null and startTime != ''">
+				AND recharge.create_time >= #{startTime}
+	        </if>
+	        <if test="endTime != null and endTime != ''">
+				AND recharge.create_time &lt; #{endTime}
+	        </if>
+	        AND recharge.order_status = 2
+	        AND recharge.is_first = 1
+		WHERE
+			muser.user_type = 2
+			<if test="startTime != null and startTime != ''">
+				AND studio.start_time >= #{startTime}
+	        </if>
+	        <if test="endTime != null and endTime != ''">
+				AND studio.start_time &lt; #{endTime}
+	        </if>
+	        <if test="userAccount != null and userAccount != ''">
+				AND muser.user_account LIKE "%"#{userAccount}"%"
+	        </if>
+		GROUP BY muser.id ORDER BY studio.start_time DESC
+	</select>
+	
+	<select id ="anchorIncomeDetails" resultType="com.onelive.common.model.vo.mem.AnchorIncomeDetailsVO">
+		SELECT t.* FROM (
+				SELECT
+				gold.amount changeMoney,
+			  	gold.change_type,
+				'' changeName
+			FROM
+				mem_goldchange gold
+			LEFT JOIN mem_user muser ON muser.user_account = gold.account 
+				WHERE muser.user_type = 2 AND muser.id = #{userId}
+				<if test="startTime != null and startTime != ''">
+					AND DATE_FORMAT(gold.create_time, '%Y-%m')= #{startTime}
+		        </if>
+<!-- 		        <if test="endTime != null and endTime != ''"> -->
+<!-- 					AND gold.create_time &lt; #{endTime} -->
+<!-- 		        </if> -->
+		        <if test="changeType != null">
+					AND gold.change_type = #{changeType}
+		        </if>
+		        
+	         <if test="changeType == null or changeType == 20">
+				UNION ALL
+				
+				SELECT 
+					(gift_number * gift_price) / 10 changeMoney,
+				  	20 change_type,
+					lang.gift_name changeName
+				FROM live_gift_log gift
+					 LEFT JOIN live_gift_lang lang ON lang.gift_id = gift.gift_id AND lang.lang = #{lang}
+				WHERE host_id = #{userId}
+					<if test="startTime != null and startTime != ''">
+						AND DATE_FORMAT(gift.giving_time, '%Y-%m')= #{startTime}
+			        </if>
+<!-- 			        <if test="endTime != null and endTime != ''"> -->
+<!-- 						AND gift.giving_time &lt; #{endTime} -->
+<!-- 			        </if> -->
+	        </if>
+        ) t
+	</select>
+
+	<select id ="anchorAssets" resultType="com.onelive.common.model.dto.mem.AnchorAssets">
+	
+	SELECT 
+			SUM(t.todayIncome) todayIncome,
+			SUM(t.monthIncome) monthIncome,
+			SUM(t.totalAssets) totalAssets,
+			SUM(t.focusMoney/10) focusMoney,
+			SUM(t.giftMoney/10) giftMoney,
+			SUM(t.otherMoney/10) otherMoney,
+			SUM(t.rebatesMoney) rebatesMoney
+		FROM (
+			SELECT
+				IFNULL(SUM(gold.amount), 0) + IFNULL(sum(gift.gift_price * gift.gift_number), 0) todayIncome,
+				0 monthIncome,
+				IFNULL(SUM(wallet.amount), 0) totalAssets,
+				IFNULL(SUM(anchor.focus_total), 0) focusMoney,
+				IFNULL(SUM(anchor.gift_total), 0) giftMoney,
+				IFNULL(SUM(anchor.barrage_total), 0) otherMoney,
+				IFNULL(SUM(anchor.rebates_total), 0) rebatesMoney
+			FROM
+				mem_user muser
+			LEFT JOIN live_gift_log gift ON gift.host_id = muser.id AND TO_DAYS(gift.giving_time) = TO_DAYS(NOW())
+			LEFT JOIN mem_goldchange gold on gold.account = muser.user_account AND TO_DAYS(gold.create_time) = TO_DAYS(NOW())
+			LEFT JOIN mem_user_anchor anchor on anchor.user_id = muser.id
+			LEFT JOIN mem_wallet wallet on wallet.user_id = muser.id
+		  WHERE muser.id = #{userId}
+		  
+			UNION ALL
+			
+			SELECT
+				0 todayIncome,
+				IFNULL(SUM(gold.amount), 0) + IFNULL(SUM(gift.gift_price * gift.gift_number), 0) monthIncome,
+				0 totalAssets,
+				0 focusMoney,
+				0 giftMoney,
+				0 otherMoney,
+				0 rebatesMoney
+			FROM
+				mem_user muser
+			LEFT JOIN live_gift_log gift ON gift.host_id = muser.id AND DATE_FORMAT(gift.giving_time, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
+			LEFT JOIN mem_goldchange gold on gold.account = muser.user_account AND DATE_FORMAT(gold.create_time, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
+			LEFT JOIN mem_user_anchor anchor on anchor.user_id = muser.id
+		  WHERE muser.id = #{userId}
+		) t
+	</select>
+	
+	
+	<select id ="familyAssets" resultType="com.onelive.common.model.dto.mem.AnchorAssets">
+		SELECT 
+			SUM(t.todayIncome) todayIncome,
+			SUM(t.monthIncome) monthIncome,
+			SUM(t.totalAssets) totalAssets,
+			SUM(t.focusMoney/10) focusMoney,
+			SUM(t.giftMoney/10) giftMoney,
+			SUM(t.otherMoney/10) otherMoney,
+			SUM(t.rebatesMoney) rebatesMoney
+		FROM (
+			SELECT
+				IFNULL(SUM(gold.amount), 0) + IFNULL(SUM(gift.gift_price * gift.gift_number), 0) todayIncome,
+				0 monthIncome,
+				IFNULL(SUM(wallet.amount), 0) totalAssets,
+				IFNULL(SUM(anchor.focus_total), 0) focusMoney,
+				IFNULL(SUM(anchor.gift_total), 0) giftMoney,
+				IFNULL(SUM(anchor.barrage_total), 0) otherMoney,
+				IFNULL(SUM(anchor.rebates_total), 0) rebatesMoney
+			FROM
+				mem_user muser
+			LEFT JOIN live_gift_log gift ON gift.host_id = muser.id AND TO_DAYS(gift.giving_time) = TO_DAYS(now())
+			LEFT JOIN mem_goldchange gold on gold.account = muser.user_account AND TO_DAYS(gold.create_time) = TO_DAYS(NOW())
+			LEFT JOIN mem_user_anchor anchor on anchor.user_id = muser.id
+			left join mem_family family on family.id = anchor.family_id
+			LEFT JOIN mem_wallet wallet on wallet.user_id = muser.id
+		  WHERE family.user_id = #{userId}
+		  
+		UNION ALL
+			
+			SELECT
+				0 todayIncome,
+				IFNULL(SUM(gold.amount), 0) + IFNULL(SUM(gift.gift_price * gift.gift_number), 0) monthIncome,
+				0 totalAssets,
+				0 focusMoney,
+				0 giftMoney,
+				0 otherMoney,
+				0 rebatesMoney
+			FROM
+				mem_user muser
+			LEFT JOIN live_gift_log gift ON gift.host_id = muser.id AND DATE_FORMAT(gift.giving_time, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
+			LEFT JOIN mem_goldchange gold on gold.account = muser.user_account AND DATE_FORMAT(gold.create_time, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
+			LEFT JOIN mem_user_anchor anchor on anchor.user_id = muser.id
+			left join mem_family family ON family.id = anchor.family_id
+		  WHERE family.user_id = #{userId}
+		) t
+	</select>
+	
+	<select id ="getTodayLiveTime" resultType="com.onelive.common.model.vo.live.LiveLogForApiVO">
+	  SELECT IFNULL(SUM(live_time), 0) liveTime, user_id FROM live_studio_log 
+	  		WHERE TO_DAYS(start_time) = TO_DAYS(NOW()) AND user_id = #{userId}
+	</select>
+	
+	<select id ="getAnchorInfoByStudioNum" resultType="com.onelive.common.model.vo.live.LiveAnchorVO">
+	  SELECT us.id userId,us.avatar,us.nick_name, us.user_type FROM live_studio_list studio 
+		LEFT JOIN mem_user us on us.id= studio.user_id
+		WHERE studio.studio_num = #{studioNum} LIMIT 1
+	</select>
+	
+	<select id ="getAnchorInfoDetailByStudioNum" resultType="com.onelive.common.model.vo.live.LiveAnchorDetailVO">
+		SELECT
+			us.id userId,
+			us.user_account,
+			us.avatar,
+			us.nick_name,
+			us.remark,
+			us.user_level level,
+			us.user_type,
+			anchor.announcement,
+			count(focus1.id) focusNum,
+			count(focus2.id) fansNum,
+			us.sex,
+			studio.studio_status,
+			country.country_name,
+			us.personal_signature
+		FROM
+			live_studio_list studio
+			LEFT JOIN mem_user us ON us.id = studio.user_id
+			LEFT JOIN mem_user_anchor anchor on anchor.user_id = studio.user_id
+			LEFT JOIN mem_focus_user focus1 on focus1.user_id = studio.user_id
+			LEFT JOIN mem_focus_user focus2 on focus2.focus_id = studio.user_id
+			LEFT JOIN sys_country country on country.id = us.country_id
+		WHERE studio.studio_num = #{studioNum} LIMIT 1
+	</select>
+		
+	<select id ="getMonthIncomeByChangeType" resultType="java.math.BigDecimal">
+		SELECT IFNULL(SUM(t.changeMoney), 0) FROM (
+				SELECT
+				gold.amount changeMoney
+			FROM
+				mem_goldchange gold
+			LEFT JOIN mem_user muser ON muser.user_account = gold.account 
+				WHERE muser.user_type = 2 AND muser.id = #{userId}
+					AND DATE_FORMAT(gold.create_time, '%Y-%m')= #{yearMonth}
+		        <if test="changeType != null">
+					AND gold.change_type = #{changeType}
+		        </if>
+		        
+	         <if test="changeType == null or changeType == 20">
+				UNION ALL
+				
+				SELECT 
+					(gift_number * gift_price) changeMoney
+				FROM live_gift_log gift
+				WHERE host_id = #{userId}
+					AND DATE_FORMAT(gift.giving_time, '%Y-%m')= #{yearMonth}
+	        </if>
+        ) t
+	</select>
+		
+	<select id ="getMonthExpend" resultType="java.math.BigDecimal">
+		SELECT
+			IFNULL(SUM(gold.amount), 0)
+		FROM
+			mem_goldchange gold
+		LEFT JOIN mem_user muser ON muser.user_account = gold.account 
+			WHERE muser.user_type = 2 AND muser.id = #{userId}
+				AND DATE_FORMAT(gold.create_time, '%Y-%m')= #{yearMonth}
+				AND gold.change_type = 3
+	</select>
+	
+	<update id ="updateAnchorFocuseTotal">
+		UPDATE mem_user_anchor focus_total = focus_total + #{focusAward} WHERE user_id = #{userId} LIMIT 1
+	</update>
+	
+	
+	<select id ="canWithdrawAnchor" resultType="com.onelive.common.model.req.mem.WithdrawAnchorVo">
+		SELECT 
+	  		an.user_id,
+	  		IFNULL(wallet.amount, 0) withdrawAccount,
+	  		mu.nick_name,
+	  		mu.user_account,
+	  		mu.avatar
+	  	FROM mem_user_anchor an 
+			LEFT JOIN mem_user mu ON mu.id = an.user_id
+			LEFT JOIN mem_wallet wallet on wallet.account = mu.user_account
+		WHERE mu.user_type = 2
+		AND an.family_id = #{familyId}
+	       GROUP BY an.id
+	</select>
+	
+	
+	<select id ="getInfoByUserId" resultType="com.onelive.common.mybatis.entity.MemUserAnchor">
+		SELECT 
+			anchor.id,
+			anchor.user_id,
+			anchor.family_id,
+			anchor.live_time,
+			anchor.live_count,
+			IFNULL(family.gift_ratio, anchor.gift_ratio) gift_ratio,
+			anchor.is_focus_award,
+			anchor.focus_award,
+			IFNULL(wallet.amount, 0) balance,
+			anchor.focus_total,
+			anchor.gift_total,
+			anchor.barrage_total,
+			anchor.rebates_total,
+			anchor.withdrawal,
+			anchor.merchant_code,
+			anchor.studio_open_area,
+			anchor.announcement
+		FROM mem_user_anchor anchor 
+			LEFT JOIN mem_family family ON anchor.family_id = family.id
+			LEFT JOIN mem_wallet wallet ON wallet.user_id = anchor.user_id AND wallet.wallet_type = 1
+		WHERE anchor.user_id = #{userId}
+	</select>
+	
+	
+</mapper>

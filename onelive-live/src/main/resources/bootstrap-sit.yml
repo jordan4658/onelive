@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: onelive-live
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+      config:
+        #server-addr: 159.138.152.65:4042
+        server-addr: localhost:8848
+        prefix: common
+        file-extension: yml
+        #group: dev
+        #namespace: 16142b90-f1c3-427d-93d7-f4ca596f7c2c
+        enabled: true
+        refresh-enabled: false
+server:
+  port: 9015

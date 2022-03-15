@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.mem.SlaveMemGoldchangeMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.MemGoldchange">
+        <id column="gold_chang_id" property="goldChangId"/>
+        <result column="gold_type" property="goldType"/>
+        <result column="gold_change_order_no" property="goldChangeOrderNo"/>
+        <result column="chang_wallet_type" property="changWalletType"/>
+        <result column="ref_no" property="refNo"/>
+        <result column="account" property="account"/>
+        <result column="change_type" property="changeType"/>
+        <result column="transfer_in_wallet_id" property="transferInWalletId"/>
+        <result column="transfer_out_wallet_id" property="transferOutWalletId"/>
+        <result column="gold_num" property="goldNum"/>
+        <result column="amount" property="amount"/>
+        <result column="recgold_num" property="recgoldNum"/>
+        <result column="pre_cgdml" property="preCgdml"/>
+        <result column="after_cgdml" property="afterCgdml"/>
+        <result column="opnote" property="opnote"/>
+        <result column="is_delete" property="isDelete"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="flow_type" property="flowType"/>
+        <result column="third_type" property="thirdType"/>
+        <result column="rec_silver_num" property="recSilverNum"/>
+        <result column="silver_num" property="silverNum"/>
+        <result column="silver_amount" property="silverAmount"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        gold_chang_id
+        ,gold_change_order_no
+        ,gold_type, chang_wallet_type, ref_no, account, change_type, transfer_in_wallet_id,
+transfer_out_wallet_id, gold_num, amount, recgold_num, pre_cgdml, after_cgdml, opnote,
+is_delete, create_user, create_time, update_user, update_time,flow_type,third_type,rec_silver_num,silver_num,silver_amount
+    </sql>
+
+
+    <select id="queryUserDetail" resultType="com.onelive.common.model.vo.report.UserReportDetailVO">
+        select amount as tradeAmount, create_time as createTime , change_type as changeType ,
+        silver_amount as tradeSilver,abs((pre_cgdml-after_cgdml)) as tradeDml
+        from mem_goldchange
+        <where>
+            and account = #{account}
+            <if test="beginDate !=null and beginDate  != ''">
+                and create_time   <![CDATA[>=]]> #{beginDate}
+            </if>
+            <if test="endDate !=null and endDate  != ''">
+                and create_time   <![CDATA[<=]]>   date_add(#{endDate}, interval 1 day)
+            </if>
+            <if test="changeTypes != null and changeTypes != '' ">
+                And change_type in (${changeTypes})
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="queryUserDetailSum" resultType="java.math.BigDecimal">
+        SELECT
+        IFNULL(sum(a.amount),0) AS sumAmount
+        from mem_goldchange a
+        <where>
+            and a.account = #{account}
+            <if test="beginDate !=null and beginDate  != ''">
+                and a.create_time   <![CDATA[>=]]> #{beginDate}
+            </if>
+            <if test="endDate !=null and endDate  != ''">
+                and a.create_time   <![CDATA[<=]]> #{endDate}
+            </if>
+            <if test="changeTypes != null and changeTypes != '' ">
+                And a.change_type in (${changeTypes})
+            </if>
+            and a.flow_type in (0,1)
+        </where>
+        order by a.create_time desc
+    </select>
+
+    <select id="rechargeRecord" resultType="com.onelive.common.model.vo.mem.MemGoldchangeVO">
+        SELECT a.sum_amt      price,
+               a.create_time  payDate,
+               a.order_no     orderNo,
+               a.order_status orderStatus,
+               b.pay_way_name payWayName
+        FROM pay_order_recharge a
+                 left JOIN pay_way b on a.pay_way_id = b.pay_way_id
+        WHERE a.account = #{account}
+          and a.create_time &gt;= #{startDate}
+          and a.create_time &lt; #{endDate}
+    </select>
+    <select id="listPage" resultType="com.onelive.common.model.vo.report.MemGoldChangeBackVO">
+        SELECT
+        a.gold_chang_id,
+        a.gold_type,
+        a.account,
+        a.change_type,
+        a.gold_num,
+        a.amount,
+        a.silver_amount,
+        a.rec_silver_num,
+        a.silver_num,
+        a.recgold_num,
+        a.pre_cgdml,
+        a.after_cgdml,
+        a.opnote,
+        a.create_time,
+        b.nick_name
+        FROM
+        mem_goldchange a
+        LEFT JOIN
+        mem_user b on a.account=b.user_account
+        WHERE 1=1
+        <if test="startTime!=null ">
+            and a.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime!=null ">
+            and a.create_time &lt; #{endTime}
+        </if>
+        <if test="changWalletType !=null  and changWalletType !='' ">
+            and a.chang_wallet_type = #{changWalletType}
+        </if>
+        <if test="changeType!=null ">
+            and a.change_type = #{changeType}
+        </if>
+        <if test="account !=null  and account !='' ">
+            and a.account = #{account}
+        </if>
+        <if test="nickName !=null  and nickName !='' ">
+            and b.nick_name like "%"#{nickName}"%"
+        </if>
+        order by a.create_time desc
+    </select>
+
+
+    <select id="getUserChangeLog" resultType="com.onelive.common.mybatis.entity.MemGoldchange" >
+        select
+        <include refid="Base_Column_List"></include>
+        from mem_goldchange a
+        where a.account = #{userAccount}
+            <if test="queryDate !=null">
+                and a.create_time &lt; #{queryDate}
+            </if>
+            <if test="startDate !=null">
+                and a.create_time &lt; #{startDate}
+            </if>
+            AND a.change_type IN
+            <foreach collection="transactionTypes" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+          and a.gold_chang_id in(
+              select
+                     max(gold_chang_id)
+              from mem_goldchange b
+              WHERE b.account = #{userAccount}
+                <if test="queryDate !=null">
+                    and a.create_time &lt; #{queryDate}
+                </if>
+                <if test="startDate !=null">
+                    and a.create_time &lt; #{startDate}
+                </if>
+                AND b.change_type IN
+                <foreach collection="transactionTypes" item="item" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+              group by b.ref_no)
+            order by #{pageSize}
+
+    </select>
+
+
+    <select id="totalUserIncomeAndExpenses" resultType="com.onelive.common.model.dto.pay.TotalUserIncomeAndExpensesDTO">
+        select
+        c.totalDate ,
+        abs(sum(c.goldIncome)) goldIncome ,
+        abs(sum(c.goldExpend)) goldExpend ,
+        abs(sum(c.silverIncome)) silverIncome ,
+        abs(sum(c.silverExpend)) silverExpend
+        from (
+        select
+        DATE_FORMAT(a.create_time,'%Y-%m') totalDate,
+        <!-- 金币统计 收入 -->
+        CASE WHEN a.gold_type=2 and a. flow_type=0 THEN SUM(a.amount) ELSE 0 end as goldIncome,
+        <!-- 金币统计 支出 -->
+        CASE WHEN a.gold_type=2 and a.flow_type=1 THEN SUM(a.amount) ELSE 0 end as goldExpend,
+        <!-- 银豆统计 收入 -->
+        CASE WHEN a.gold_type=1 and a.flow_type=0 THEN SUM(a.silver_amount ) ELSE 0 end as silverIncome,
+        <!-- 银豆统计 支出 -->
+        CASE WHEN a.gold_type=1 and a.flow_type=1 THEN SUM(a.silver_amount ) ELSE 0 end as silverExpend
+        from
+        mem_goldchange a
+        where
+        a.account= #{userAccount}
+        and a.change_type in
+        <foreach collection="transactionTypes" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and DATE_FORMAT(a.create_time,'%Y-%m') in
+        <foreach collection="listDate" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY
+        DATE_FORMAT(a.create_time,'%Y-%m'),
+        a.flow_type,
+        a.gold_type
+        ) c
+        group by c.totalDate
+        order by c.totalDate desc
+    </select>
+    <!--    <select id="totalUserIncomeAndExpenses" resultType="com.onelive.common.model.dto.pay.TotalUserIncomeAndExpensesDTO">-->
+
+    <!--        &lt;!&ndash; 金币统计 收入 &ndash;&gt;-->
+    <!--        select-->
+    <!--            b.totalDate,-->
+    <!--            IFNULL(b.goldIncome,0) goldIncome,-->
+    <!--            IFNULL(c.goldExpend,0) goldExpend,-->
+    <!--            IFNULL(d.silverIncome,0) silverIncome,-->
+    <!--            IFNULL(e.silverExpend,0) silverExpend-->
+    <!--        from-->
+    <!--            (select DATE_FORMAT(a.create_time,'%Y-%m') totalDate,-->
+    <!--                    SUM(a.amount)  as  goldIncome-->
+    <!--             from mem_goldchange a-->
+    <!--             where-->
+    <!--                a.account= #{userAccount}-->
+    <!--                and a.gold_type=2 and a.flow_type=0-->
+    <!--                and  a.change_type in-->
+    <!--                <foreach collection="transactionTypes" item="item" index="index" open="(" separator="," close=")">-->
+    <!--                    #{item}-->
+    <!--                </foreach>-->
+    <!--                and DATE_FORMAT(a.create_time,'%Y-%m') in-->
+    <!--                <foreach collection="listDate" item="item" index="index" open="(" separator="," close=")">-->
+    <!--                    #{item}-->
+    <!--                </foreach>-->
+    <!--             GROUP BY-->
+    <!--                 DATE_FORMAT( a.create_time, '%Y-%m' ))b-->
+
+    <!--        LEFT JOIN-->
+    <!--        &lt;!&ndash; 金币统计 支出 &ndash;&gt;-->
+    <!--            (select DATE_FORMAT(a.create_time,'%Y-%m') totalDate,-->
+    <!--                    SUM(a.amount)  as  goldExpend-->
+    <!--             from mem_goldchange a-->
+    <!--             where-->
+    <!--                a.account= #{userAccount}-->
+    <!--                and a.gold_type=2 and a.flow_type=1-->
+    <!--                and  a.change_type in-->
+    <!--                <foreach collection="transactionTypes" item="item" index="index" open="(" separator="," close=")">-->
+    <!--                    #{item}-->
+    <!--                </foreach>-->
+    <!--                and DATE_FORMAT(a.create_time,'%Y-%m') in-->
+    <!--                <foreach collection="listDate" item="item" index="index" open="(" separator="," close=")">-->
+    <!--                    #{item}-->
+    <!--                </foreach>-->
+    <!--             GROUP BY-->
+    <!--                 DATE_FORMAT( a.create_time, '%Y-%m' )) c   on  c.totalDate=b.totalDate-->
+
+    <!--        LEFT JOIN-->
+    <!--        &lt;!&ndash; 银豆统计 收入 &ndash;&gt;-->
+    <!--            (select DATE_FORMAT(a.create_time,'%Y-%m') totalDate,-->
+    <!--                    SUM(a.amount)  as  silverIncome-->
+    <!--             from mem_goldchange a-->
+    <!--             where-->
+    <!--                a.account= #{userAccount}-->
+    <!--                and a.gold_type=1 and a.flow_type=0-->
+    <!--                and  a.change_type in-->
+    <!--                <foreach collection="transactionTypes" item="item" index="index" open="(" separator="," close=")">-->
+    <!--                    #{item}-->
+    <!--                </foreach>-->
+    <!--                and DATE_FORMAT(a.create_time,'%Y-%m') in-->
+    <!--                <foreach collection="listDate" item="item" index="index" open="(" separator="," close=")">-->
+    <!--                    #{item}-->
+    <!--                </foreach>-->
+    <!--             GROUP BY-->
+    <!--                 DATE_FORMAT( a.create_time, '%Y-%m' )) d   on  d.totalDate=b.totalDate-->
+
+    <!--        LEFT JOIN-->
+    <!--        &lt;!&ndash; 银豆统计 支出 &ndash;&gt;-->
+    <!--            (select DATE_FORMAT(a.create_time,'%Y-%m') totalDate,-->
+    <!--                    SUM(a.amount)  as  silverExpend-->
+    <!--             from mem_goldchange a-->
+    <!--             where-->
+    <!--                a.account= #{userAccount}-->
+    <!--                and a.gold_type=1 and a.flow_type=1-->
+    <!--                and  a.change_type in-->
+    <!--                <foreach collection="transactionTypes" item="item" index="index" open="(" separator="," close=")">-->
+    <!--                    #{item}-->
+    <!--                </foreach>-->
+    <!--                and DATE_FORMAT(a.create_time,'%Y-%m') in-->
+    <!--                <foreach collection="listDate" item="item" index="index" open="(" separator="," close=")">-->
+    <!--                    #{item}-->
+    <!--                </foreach>-->
+    <!--             GROUP BY-->
+    <!--                 DATE_FORMAT( a.create_time, '%Y-%m' )) e   on  e.totalDate=b.totalDate-->
+
+    <!--    </select>-->
+
+    <select id="getUserGoldchangeTotalByType" resultType="java.math.BigDecimal">
+        SELECT SUM(gold_num)
+        FROM mem_goldchange
+        WHERE account = #{account}
+          AND change_type = #{type}
+    </select>
+
+</mapper>

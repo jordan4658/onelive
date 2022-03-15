@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.live.SlaveRoomFastWordsMapper">
+
+
+
+    <select id="getList" resultType="com.onelive.common.mybatis.entity.RoomFastWords">
+        SELECT * FROM room_fast_words
+          <where>
+	          	<if test="context != null and context != ''">
+		            AND context LIKE "%"#{context}"%"
+		        </if>
+		        <if test="lang != null and lang != ''">
+		            AND lang = #{lang}
+	            </if>
+          </where>
+        ORDER BY sort_num
+    </select>
+
+
+</mapper>

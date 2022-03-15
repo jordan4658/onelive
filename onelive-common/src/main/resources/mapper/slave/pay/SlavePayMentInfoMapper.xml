@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.pay.SlavePayMentInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.PayMentInfo">
+        <id column="pay_id" property="payId" />
+        <result column="pay_code" property="payCode" />
+        <result column="pay_start_time" property="payStartTime" />
+        <result column="pay_end_time" property="payEndTime" />
+        <result column="serial_no" property="serialNo" />
+        <result column="accno" property="accno" />
+        <result column="order_no" property="orderNo" />
+        <result column="pay_way_id" property="payWayId" />
+        <result column="pay_type" property="payType" />
+        <result column="pay_amt" property="payAmt" />
+        <result column="pay_status" property="payStatus" />
+        <result column="pay_errdesc" property="payErrdesc" />
+        <result column="system_name" property="systemName" />
+        <result column="pay_code_url" property="payCodeUrl" />
+        <result column="pay_note" property="payNote" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="provider_id" property="providerId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        pay_id, pay_code, pay_start_time, pay_end_time, serial_no, accno, order_no, pay_way_id, pay_type, pay_amt, pay_status, pay_errdesc, system_name, pay_code_url, pay_note, is_delete, create_user, create_time, update_user, update_time, provider_id
+    </sql>
+
+</mapper>

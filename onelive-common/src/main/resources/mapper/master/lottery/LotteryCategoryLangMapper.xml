@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.lottery.LotteryCategoryLangMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.LotteryCategoryLang">
+        <id column="id" property="id" />
+        <result column="category_id" property="categoryId" />
+        <result column="lang" property="lang" />
+        <result column="name" property="name" />
+        <result column="alias" property="alias" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, category_id, lang, name, alias, create_time, update_time
+    </sql>
+
+</mapper>

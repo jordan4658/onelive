@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.finance.MemLevelMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.MemLevel">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="deposit_times_limit" property="depositTimesLimit" />
+        <result column="single_deposit_limit" property="singleDepositLimit" />
+        <result column="total_deposit_limit" property="totalDepositLimit" />
+        <result column="withdrawal_times_limit" property="withdrawalTimesLimit" />
+        <result column="total_withdrawal_limit" property="totalWithdrawalLimit" />
+        <result column="efficient_start_time" property="efficientStartTime" />
+        <result column="efficient_end_time" property="efficientEndTime" />
+        <result column="remark" property="remark" />
+        <result column="sort" property="sort" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="version" property="version" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, deposit_times_limit, single_deposit_limit, total_deposit_limit, withdrawal_times_limit, total_withdrawal_limit, efficient_start_time, efficient_end_time, remark, sort, create_time, update_time, version
+    </sql>
+
+</mapper>

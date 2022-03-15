@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.operate.SlaveOperateMessageMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.OperateMessage">
+        <id column="id" property="id" />
+        <result column="title" property="title" />
+        <result column="receive_type" property="receiveType" />
+        <result column="receiver" property="receiver" />
+        <result column="msg_type" property="msgType" />
+        <result column="img" property="img" />
+        <result column="skip_url" property="skipUrl" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_time" property="createTime" />
+        <result column="create_user" property="createUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="merchant_code" property="merchantCode" />
+        <result column="last_user_id" property="lastUserId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, title, receive_type, receiver, msg_type, img, skip_url, is_delete, create_time, create_user, update_time, update_user, merchant_code, last_user_id
+    </sql>
+
+</mapper>

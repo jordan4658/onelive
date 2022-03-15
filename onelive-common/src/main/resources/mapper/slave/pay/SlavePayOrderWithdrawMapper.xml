@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.pay.SlavePayOrderWithdrawMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.PayOrderWithdraw">
+        <id column="withdraw_id" property="withdrawId"/>
+        <result column="bank_accid" property="bankAccid"/>
+        <result column="withdraw_no" property="withdrawNo"/>
+        <result column="account" property="account"/>
+        <result column="withdraw_date" property="withdrawDate"/>
+        <result column="withdraw_amt" property="withdrawAmt"/>
+        <result column="withdraw_status" property="withdrawStatus"/>
+        <result column="operation_explain" property="operationExplain"/>
+        <result column="pay_amt" property="payAmt"/>
+        <result column="pay_mem_name" property="payMemName"/>
+        <result column="pay_date" property="payDate"/>
+        <result column="is_delete" property="isDelete"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_first" property="isFirst"/>
+    </resultMap>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="ListPageBaseResultMap" type="com.onelive.common.model.vo.pay.PayOrderWithdrawBackVO">
+        <id column="withdraw_id" property="withdrawId"/>
+        <result column="bank_accid" property="bankAccid"/>
+        <result column="bank_account_no" property="bankAccountNo"/>
+        <result column="withdraw_no" property="withdrawNo"/>
+        <result column="account" property="account"/>
+        <result column="nick_name" property="nickname"/>
+        <result column="withdraw_date" property="withdrawDate"/>
+        <result column="withdraw_amt" property="withdrawAmt"/>
+        <result column="withdraw_status" property="withdrawStatus"/>
+        <result column="operation_explain" property="operationExplain"/>
+        <result column="pay_amt" property="payAmt"/>
+        <result column="pay_mem_name" property="payMemName"/>
+        <result column="pay_date" property="payDate"/>
+        <result column="is_delete" property="isDelete"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        withdraw_id
+        , bank_accid, withdraw_no, account, withdraw_date, withdraw_amt, withdraw_status, operation_explain, pay_amt, pay_mem_name, pay_date, is_delete, create_user, create_time, update_user, update_time,is_first
+    </sql>
+    <select id="withdrawRecordList" resultType="com.onelive.common.model.vo.mem.MemGoldchangeVO">
+        SELECT a.create_time     payDate,
+               a.withdraw_no     orderNo,
+               a.withdraw_status orderStatus,
+               a.withdraw_amt    price,
+               b.bank_account_no bankNo,
+               c.param_value     payWayName
+        FROM pay_order_withdraw a
+                 LEFT JOIN mem_bank_account b ON b.bank_accid = a.bank_accid
+                 LEFT JOIN sys_bus_parameter c on c.param_code = b.bank_code
+        WHERE a.account = #{account}
+          and a.create_time &gt;= #{startDate}
+          and a.create_time &lt; #{endDate}
+        order by a.create_time desc
+    </select>
+
+    <select id="listPage" resultMap="ListPageBaseResultMap">
+        SELECT a.*,
+        b.nick_name,
+        c.bank_account_no
+        FROM pay_order_withdraw a
+        LEFT JOIN mem_user b ON a.account = b.user_account
+        LEFT JOIN mem_bank_account c on a.bank_accid = c.bank_accid
+        where 1=1
+        <if test="account !=null and account !='' ">
+            and a.account=#{account}
+        </if>
+        <if test="orderNo !=null and orderNo !='' ">
+            and a.withdraw_no=#{orderNo}
+        </if>
+        <if test="startDate !=null  ">
+            and a.create_time &gt;= #{startDate}
+        </if>
+        <if test="endDate !=null  ">
+            and a.create_time &lt;= #{endDate}
+        </if>
+        <if test="orderStatus !=null  ">
+            and a.withdraw_status = #{orderStatus}
+        </if>
+        order by a.create_time desc
+    </select>
+
+    <select id="sumWithdraw" resultType="java.math.BigDecimal">
+        select IFNULL(sum(withdraw_amt), 0)
+        from pay_order_withdraw
+        where withdraw_date >= #{startDate}
+          and withdraw_date <![CDATA[ < ]]> #{endDate}
+          and withdraw_status = 2
+    </select>
+
+    <select id="getWithdrawDetailsByOrderNo" resultType="com.onelive.common.model.vo.pay.PayWithdrawResultsVO">
+        SELECT a.withdraw_amt      withdrawAmt,
+               a.operation_explain cause,
+               a.withdraw_status   orderStatus,
+               a.create_time       endTime,
+               b.bank_account_no   bankTail,
+               c.param_value       bankName
+        FROM pay_order_withdraw a
+                 LEFT JOIN mem_bank_account b ON a.bank_accid = b.bank_accid
+                 LEFT JOIN sys_bus_parameter c on b.bank_code = c.param_code
+        where a.account = #{account}
+          and a.withdraw_no = #{orderNo}
+    </select>
+
+    <select id="getWithdrawAmt" resultType="java.math.BigDecimal">
+        SELECT SUM(a.withdraw_amt) withdrawAmt
+        FROM pay_order_withdraw a
+        where
+        a.withdraw_status = 2
+        <if test="startTime">
+            and  a.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime">
+            and  a.create_time &lt;= #{endTime}
+        </if>
+    </select>
+
+    <select id="totalWithdraw" resultType="com.onelive.common.model.dto.report.StatSourceDTO">
+        SELECT
+        'all' as source,
+        SUM( a.withdraw_amt ) AS total
+        FROM
+        pay_order_withdraw a
+        WHERE
+        a.withdraw_status =2
+        <if test=" startTime!=null">
+            and a.update_time &gt;= #{startTime}
+        </if>
+        <if test=" endTime!=null">
+            and a.update_time &lt;= #{endTime}
+        </if>
+    </select>
+
+    <select id="withdrawListPage" resultType="com.onelive.common.model.vo.risk.RiskAuditWithdrawVO">
+        select p.withdraw_id, p.account, p.bank_accid, p.withdraw_no, p.withdraw_status, p.pay_date, p.withdraw_amt, p.withdraw_date, m.nick_name nickname
+        from pay_order_withdraw p join mem_user m on p.account = m.user_account
+        where 1=1
+        <if test="withdrawNo != null and withdrawNo != '' ">
+            and p.withdraw_no like concat('%', #{withdrawNo}, '%')
+        </if>
+        <if test="withdrawStatus != null">
+            and withdraw_status = #{withdrawStatus}
+        </if>
+        <if test="account != null and account != '' ">
+            and p.account like concat('%', #{account}, '%')
+        </if>
+        <if test="startTime != null and startTime != '' ">
+            and p.withdraw_date &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != '' ">
+            and p.withdraw_date &lt; #{endTime}
+        </if>
+    </select>
+</mapper>

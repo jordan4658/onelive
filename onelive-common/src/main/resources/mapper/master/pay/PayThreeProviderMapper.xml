@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.pay.PayThreeProviderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.PayThreeProvider">
+        <id column="provider_id" property="providerId"/>
+        <result column="provider_name" property="providerName"/>
+        <result column="provider_type" property="providerType"/>
+        <result column="provider_code" property="providerCode"/>
+        <result column="back_url" property="backUrl"/>
+        <result column="allow_ips" property="allowIps"/>
+        <result column="torder_url" property="torderUrl"/>
+        <result column="pay_gateway" property="payGateway"/>
+        <result column="agent_no" property="agentNo"/>
+        <result column="provider_app_id" property="providerAppId" />
+        <result column="secret_code" property="secretCode"/>
+        <result column="pub_secret" property="pubSecret"/>
+        <result column="pri_secret" property="priSecret"/>
+        <result column="bank_name" property="bankName"/>
+        <result column="account_no" property="accountNo"/>
+        <result column="account_name" property="accountName"/>
+        <result column="bank_address" property="bankAddress"/>
+        <result column="status" property="status"/>
+        <result column="is_delete" property="isDelete"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user" property="updateUser"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        provider_id, provider_name, provider_type, provider_code, back_url, allow_ips, get_order_url, add_order_url, agent_no, provider_app_id, secret_code, pub_secret, pri_secret, bank_name, bank_account_no, bank_account_name, bank_address, status, is_delete, create_user, create_time, update_user, update_time
+    </sql>
+
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.game.GameModuleSortMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.GameModuleSort">
+        <id column="id" property="id" />
+        <result column="module_id" property="moduleId" />
+        <result column="show_name" property="showName" />
+        <result column="game_category" property="gameCategory" />
+        <result column="game_name" property="gameName" />
+        <result column="img_url" property="imgUrl" />
+        <result column="is_hide" property="isHide" />
+        <result column="lang" property="lang" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_time" property="createTime" />
+        <result column="create_user" property="createUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="merchant_code" property="merchantCode" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, module_id, show_name, game_category, game_name, img_url, is_hide, lang, is_delete, create_time, create_user, update_time, update_user, merchant_code
+    </sql>
+
+</mapper>

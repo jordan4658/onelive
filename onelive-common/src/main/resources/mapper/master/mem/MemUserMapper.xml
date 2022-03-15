@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.mem.MemUserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.MemUser">
+        <id column="id" property="id" />
+        <result column="password" property="password" />
+        <result column="pay_password" property="payPassword" />
+        <result column="salt" property="salt" />
+        <result column="country_id" property="countryId" />
+        <result column="nick_name" property="nickName" />
+        <result column="remark" property="remark" />
+        <result column="sex" property="sex" />
+        <result column="user_account" property="userAccount" />
+        <result column="focus_num" property="focusNum" />
+        <result column="fans_num" property="fansNum" />
+        <result column="is_frozen" property="isFrozen" />
+        <result column="user_level" property="userLevel" />
+        <result column="avatar" property="avatar" />
+        <result column="mobile_phone" property="mobilePhone" />
+        <result column="register_area_code" property="registerAreaCode" />
+        <result column="accno" property="accno" />
+        <result column="group_id" property="groupId" />
+        <result column="birthday" property="birthday" />
+        <result column="register_ip" property="registerIp" />
+        <result column="register_time" property="registerTime" />
+        <result column="created_by" property="createdBy" />
+        <result column="register_area" property="registerArea" />
+        <result column="register_source" property="registerSource" />
+        <result column="register_device" property="registerDevice" />
+        <result column="register_country_code" property="registerCountryCode" />
+        <result column="register_area_select_status" property="registerAreaSelectStatus" />
+        <result column="default_country_code" property="defaultCountryCode" />
+        <result column="open_country_code" property="openCountryCode" />
+        <result column="last_login_ip" property="lastLoginIp" />
+        <result column="last_login_time" property="lastLoginTime" />
+        <result column="last_login_source" property="lastLoginSource" />
+        <result column="last_login_area" property="lastLoginArea" />
+        <result column="last_login_device" property="lastLoginDevice" />
+        <result column="is_commission" property="isCommission" />
+        <result column="is_bet" property="isBet" />
+        <result column="is_dispensing" property="isDispensing" />
+        <result column="is_super_live_manage" property="isSuperLiveManage" />
+        <result column="is_online" property="isOnline" />
+        <result column="user_type" property="userType" />
+        <result column="user_device_id" property="userDeviceId" />
+        <result column="personal_signature" property="personalSignature" />
+        <result column="hometown" property="hometown" />
+        <result column="marital_status" property="maritalStatus" />
+        <result column="occupation_code" property="occupationCode" />
+        <result column="nick_name_status" property="nickNameStatus" />
+        <result column="mobile_authenticated" property="mobileAuthenticated" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="merchant_code" property="merchantCode" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, password,pay_password, salt, country_id, nick_name, remark, sex, user_account, focus_num, fans_num, is_frozen, user_level, avatar, mobile_phone, register_area_code, accno, group_id, birthday, register_ip, register_time, created_by, register_area, register_source, register_device, register_country_code, register_area_select_status, default_country_code, open_country_code, last_login_ip, last_login_time, last_login_source, last_login_area, last_login_device, is_commission, is_bet, is_dispensing, is_super_live_manage, is_online, user_type, user_device_id, personal_signature, hometown, marital_status, occupation_code, nick_name_status, mobile_authenticated, update_by, update_time, merchant_code
+    </sql>
+
+</mapper>

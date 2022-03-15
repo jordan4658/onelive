@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.mem.MemAnchorWithdrawalLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.MemAnchorWithdrawalLog">
+        <id column="id" property="id" />
+        <result column="anchor_user_id" property="anchorUserId" />
+        <result column="family_id" property="familyId" />
+        <result column="withdrawal" property="withdrawal" />
+        <result column="family_withdrawal_log_no" property="familyWithdrawalLogNo" />
+        <result column="withdrawal_log_no" property="withdrawalLogNo" />
+        <result column="gold_change_no" property="goldChangeNo" />
+        <result column="merchant_code" property="merchantCode" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, anchor_user_id, family_id, withdrawal, family_withdrawal_log_no, withdrawal_log_no, gold_change_no, merchant_code, create_time
+    </sql>
+
+</mapper>

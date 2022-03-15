@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: onelive-third
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        #
+        namespace: b513648d-59e1-4e36-9ea5-75e07af3f4b1
+      config:
+        #server-addr: 159.138.152.65:4042
+        server-addr: localhost:8848
+        prefix: common
+        file-extension: yml
+        #group: dev
+        #namespace: 16142b90-f1c3-427d-93d7-f4ca596f7c2c
+        enabled: true
+        refresh-enabled: false
+server:
+  port: 9012
+
+auth:
+  skip: dev,sit
+
+businessSwitch:
+  #发送短信是否在header里面返回短信验证码（测试环境启用）
+  smsSwitch: true

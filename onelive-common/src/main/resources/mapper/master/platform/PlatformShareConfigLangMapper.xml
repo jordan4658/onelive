@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.platform.PlatformShareConfigLangMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.PlatformShareConfigLang">
+        <id column="id" property="id" />
+        <result column="share_id" property="shareId" />
+        <result column="lang" property="lang" />
+        <result column="share_content" property="shareContent" />
+        <result column="share_title" property="shareTitle" />
+        <result column="share_pic" property="sharePic" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, share_id, lang, share_content, share_title, share_pic
+    </sql>
+
+</mapper>

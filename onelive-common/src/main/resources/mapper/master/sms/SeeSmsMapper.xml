@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.sms.SeeSmsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.SeeSms">
+        <id column="id" property="id" />
+        <result column="sms_name" property="smsName" />
+        <result column="api_key" property="apiKey" />
+        <result column="secret_key" property="secretKey" />
+        <result column="send_url" property="sendUrl" />
+        <result column="query_url" property="queryUrl" />
+        <result column="valid_time" property="validTime" />
+        <result column="sms_code" property="smsCode" />
+        <result column="sort_num" property="sortNum" />
+        <result column="is_open" property="isOpen" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_user" property="createUser" />
+        <result column="update_user" property="updateUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, sms_name, api_key, secret_key, send_url, query_url, valid_time, sms_code, sort_num, is_open, is_delete, create_user, update_user, create_time, update_time
+    </sql>
+
+</mapper>

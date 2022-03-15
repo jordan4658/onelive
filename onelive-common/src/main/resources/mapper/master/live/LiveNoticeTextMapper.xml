@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.live.LiveNoticeTextMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.LiveNoticeText">
+        <id column="id" property="id" />
+        <result column="min_amount" property="minAmount" />
+        <result column="max_amount" property="maxAmount" />
+        <result column="text" property="text" />
+        <result column="is_show" property="isShow" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_time" property="createTime" />
+        <result column="create_user" property="createUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="merchant_code" property="merchantCode" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, min_amount, max_amount, text, is_show, is_delete, create_time, create_user, update_time, update_user, merchant_code
+    </sql>
+
+</mapper>

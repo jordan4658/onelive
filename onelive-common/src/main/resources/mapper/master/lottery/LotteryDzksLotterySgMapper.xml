@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.master.lottery.LotteryDzksLotterySgMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.LotteryDzksLotterySg">
+        <id column="id" property="id" />
+        <result column="issue" property="issue" />
+        <result column="bai" property="bai" />
+        <result column="shi" property="shi" />
+        <result column="ge" property="ge" />
+        <result column="number" property="number" />
+        <result column="time" property="time" />
+        <result column="ideal_time" property="idealTime" />
+        <result column="open_status" property="openStatus" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, issue, bai, shi, ge, number, time, ideal_time, open_status
+    </sql>
+
+</mapper>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onelive.common.mybatis.mapper.slave.lottery.SlaveLotteryMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.onelive.common.mybatis.entity.Lottery">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="icon" property="icon" />
+        <result column="category_id" property="categoryId" />
+        <result column="parent_id" property="parentId" />
+        <result column="startlotto_table" property="startlottoTable" />
+        <result column="startlotto_times" property="startlottoTimes" />
+        <result column="clearing_tag" property="clearingTag" />
+        <result column="cache_tag" property="cacheTag" />
+        <result column="max_odds" property="maxOdds" />
+        <result column="min_odds" property="minOdds" />
+        <result column="sort" property="sort" />
+        <result column="push_source" property="pushSource" />
+        <result column="push_status" property="pushStatus" />
+        <result column="video_url" property="videoUrl" />
+        <result column="video_start" property="videoStart" />
+        <result column="is_work" property="isWork" />
+        <result column="is_delete" property="isDelete" />
+        <result column="lottery_id" property="lotteryId" />
+        <result column="end_time" property="endTime" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, icon, category_id, parent_id, startlotto_table, startlotto_times, clearing_tag, cache_tag, max_odds, min_odds, sort, push_source, push_status, video_url, video_start, is_work, is_delete, lottery_id, end_time, create_time, update_time
+    </sql>
+
+    <select id="listAllLotteryWithLang" parameterType="com.onelive.common.model.dto.lottery.LotteryQueryDTO" resultMap="BaseResultMap">
+        SELECT
+            lo.id,
+            lang.lottery_name `name`,
+            lo.icon,
+            lo.category_id,
+            lo.parent_id,
+            lo.startlotto_table,
+            lo.startlotto_times,
+            lo.clearing_tag,
+            lo.cache_tag,
+            lo.max_odds,
+            lo.min_odds,
+            lo.sort,
+            lo.push_source,
+            lo.push_status,
+            lo.lottery_id,
+            lo.video_url,
+            lo.video_start,
+            lo.is_work,
+            lo.is_delete,
+            lo.end_time,
+            lo.create_time,
+            lo.update_time
+        FROM
+            lottery lo
+                LEFT JOIN lottery_lang lang ON lo.lottery_id = lang.lottery_id
+        <where>
+            lo.is_work = 1 AND
+            lang.lang = #{lang} AND lang.lottery_name != ''
+            <if test="isDelete != null">
+                AND lo.is_delete = #{isDelete}
+            </if>
+        </where>
+    </select>
+
+    <select id="getByLotteryId" resultType="com.onelive.common.mybatis.entity.Lottery">
+        SELECT
+            lo.id,
+            lang.lottery_name `name`,
+            lo.icon,
+            lo.category_id,
+            lo.parent_id,
+            lo.startlotto_table,
+            lo.startlotto_times,
+            lo.clearing_tag,
+            lo.cache_tag,
+            lo.max_odds,
+            lo.min_odds,
+            lo.sort,
+            lo.push_source,
+            lo.push_status,
+            lo.lottery_id,
+            lo.video_url,
+            lo.video_start,
+            lo.is_work,
+            lo.is_delete,
+            lo.end_time,
+            lo.create_time,
+            lo.update_time
+        FROM
+            lottery lo
+                LEFT JOIN lottery_lang lang ON lo.lottery_id = lang.lottery_id
+        WHERE lo.is_work = 1 
+        AND lang.lang = #{lang} AND lo.lottery_id = #{lotteryId} 
+        AND lang.lottery_name != '' AND lang.lottery_name IS NOT NULL
+            AND lo.is_delete = 0 GROUP BY lo.lottery_id
+    </select>
+
+</mapper>
